@@ -24,5 +24,20 @@ namespace teamProject_00
             this.Hide();
 
         }
+
+        private void btn_budget_Click(object sender, EventArgs e)
+        {
+            BudgetForm budgetForm = new BudgetForm();
+            budgetForm.Show();
+            this.Hide();
+        }
+
+        private void btn_report_Click(object sender, EventArgs e)
+        {
+            ReportForm reportForm = new ReportForm();
+            reportForm.Show();
+            this.Hide();
+
+        }
     }
 }
