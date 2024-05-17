@@ -46,9 +46,7 @@ namespace teamProject_00
 
         private void btn_exit_Click(object sender, EventArgs e)
         {
-            InOutForm inOutForm = new InOutForm();
-            inOutForm.Show();
-            this.Hide();
+
         }
     }
 }
