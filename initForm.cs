@@ -19,9 +19,17 @@ namespace teamProject_00
 
         private void button1_Click(object sender, EventArgs e)
         {
+            string name = textBox_name.Text;
+
             mainForm main = new mainForm();
+            main.AddPerson(name);
             main.Show();
             this.Hide();
+        }
+
+        private void initForm_Load(object sender, EventArgs e)
+        {
+            textBox_name.Focus();
         }
     }
 }

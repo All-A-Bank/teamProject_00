@@ -29,47 +29,51 @@
         private void InitializeComponent()
         {
             this.label1 = new System.Windows.Forms.Label();
-            this.button1 = new System.Windows.Forms.Button();
+            this.button_Init = new System.Windows.Forms.Button();
             this.textBox_name = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // label1
             // 
             this.label1.Font = new System.Drawing.Font("굴림", 40F);
-            this.label1.Location = new System.Drawing.Point(206, 67);
+            this.label1.Location = new System.Drawing.Point(198, 45);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(374, 70);
+            this.label1.Size = new System.Drawing.Size(280, 56);
             this.label1.TabIndex = 0;
             this.label1.Text = "All A Bank";
             // 
-            // button1
+            // button_Init
             // 
-            this.button1.Location = new System.Drawing.Point(304, 216);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(143, 64);
-            this.button1.TabIndex = 2;
-            this.button1.Text = "button1";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.button_Init.Location = new System.Drawing.Point(272, 232);
+            this.button_Init.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.button_Init.Name = "button_Init";
+            this.button_Init.Size = new System.Drawing.Size(125, 51);
+            this.button_Init.TabIndex = 3;
+            this.button_Init.Text = "들어가기";
+            this.button_Init.UseVisualStyleBackColor = true;
+            this.button_Init.Click += new System.EventHandler(this.button1_Click);
             // 
             // textBox_name
             // 
-            this.textBox_name.Location = new System.Drawing.Point(271, 165);
+            this.textBox_name.Location = new System.Drawing.Point(240, 148);
+            this.textBox_name.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.textBox_name.Name = "textBox_name";
-            this.textBox_name.Size = new System.Drawing.Size(201, 25);
-            this.textBox_name.TabIndex = 3;
-            this.textBox_name.Text = "이름";
+            this.textBox_name.Size = new System.Drawing.Size(176, 21);
+            this.textBox_name.TabIndex = 2;
+            this.textBox_name.Text = "이름을 입력해주세요!";
             // 
             // initForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(700, 360);
             this.Controls.Add(this.textBox_name);
-            this.Controls.Add(this.button1);
+            this.Controls.Add(this.button_Init);
             this.Controls.Add(this.label1);
+            this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.Name = "initForm";
             this.Text = "initial_Form";
+            this.Load += new System.EventHandler(this.initForm_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -78,7 +82,7 @@
         #endregion
 
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button button_Init;
         private System.Windows.Forms.TextBox textBox_name;
     }
 }
