@@ -97,7 +97,6 @@
             this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.Name = "loginForm";
             this.Text = "initial_Form";
-            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.initForm_FormClosed);
             this.Load += new System.EventHandler(this.initForm_Load);
             this.ResumeLayout(false);
             this.PerformLayout();

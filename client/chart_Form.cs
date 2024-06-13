@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Linq;
+using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -14,6 +15,13 @@ namespace teamProject_00
 {
     public partial class chart_Form : Form
     {
+
+        private NetworkStream m_networkStream;
+        private TcpClient m_client;
+        private string userId;
+
+        private byte[] readBuffer = new byte[1024 * 4];
+
         Dictionary<string, float> expense = new Dictionary<string, float>
         {
             {"식비",300.0f },
@@ -21,7 +29,7 @@ namespace teamProject_00
             {"주거비",500.0f },
             {"여가비",100.0f }
         };
-        public chart_Form()
+        public chart_Form(NetworkStream networkStream, TcpClient client, string userId)
         {
             InitializeComponent();
             this.Paint += new System.Windows.Forms.PaintEventHandler(this.chart_Form_Paint);
@@ -29,7 +37,7 @@ namespace teamProject_00
 
         private void btn_exit_Click(object sender, EventArgs e)
         {
-            InOutForm inOutForm = new InOutForm();
+            InOutForm inOutForm = new InOutForm(this.m_networkStream, this.m_client, userId);
             inOutForm.Show();
             this.Hide();
         }

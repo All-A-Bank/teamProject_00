@@ -34,6 +34,8 @@
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.btn_exit = new System.Windows.Forms.Button();
+            this.label3 = new System.Windows.Forms.Label();
+            this.txt_name = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // txt_ID
@@ -52,7 +54,7 @@
             // 
             // btn_signup
             // 
-            this.btn_signup.Location = new System.Drawing.Point(56, 178);
+            this.btn_signup.Location = new System.Drawing.Point(54, 237);
             this.btn_signup.Name = "btn_signup";
             this.btn_signup.Size = new System.Drawing.Size(156, 53);
             this.btn_signup.TabIndex = 2;
@@ -80,7 +82,7 @@
             // 
             // btn_exit
             // 
-            this.btn_exit.Location = new System.Drawing.Point(268, 178);
+            this.btn_exit.Location = new System.Drawing.Point(266, 237);
             this.btn_exit.Name = "btn_exit";
             this.btn_exit.Size = new System.Drawing.Size(156, 53);
             this.btn_exit.TabIndex = 5;
@@ -88,11 +90,29 @@
             this.btn_exit.UseVisualStyleBackColor = true;
             this.btn_exit.Click += new System.EventHandler(this.btn_exit_Click);
             // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(22, 166);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(49, 12);
+            this.label3.TabIndex = 7;
+            this.label3.Text = "닉네임 :";
+            // 
+            // txt_name
+            // 
+            this.txt_name.Location = new System.Drawing.Point(109, 157);
+            this.txt_name.Name = "txt_name";
+            this.txt_name.Size = new System.Drawing.Size(279, 21);
+            this.txt_name.TabIndex = 6;
+            // 
             // signupForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.label3);
+            this.Controls.Add(this.txt_name);
             this.Controls.Add(this.btn_exit);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
@@ -115,5 +135,7 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button btn_exit;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.TextBox txt_name;
     }
 }

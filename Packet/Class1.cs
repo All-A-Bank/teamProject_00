@@ -8,14 +8,10 @@ using System.Threading.Tasks;
 
 public enum PacketType
 {
-    회원가입 = 0,
-    로그인
-}
-
-public enum PacketSendERROR
-{
-    정상 = 0,
-    에러
+    에러 = 0,
+    회원가입,
+    로그인,
+    유저이름요청,
 }
 
 namespace PacketClass
@@ -25,6 +21,8 @@ namespace PacketClass
     {
         public int length;
         public int type;
+        public string message;
+        public string errorMessage;
 
         public Packet()
         {
@@ -61,11 +59,13 @@ namespace PacketClass
     {
         public string userId;
         public string password;
+        public string name;
 
         public SignUp()
         {
-            userId = null;
-            password = null;
+            this.userId = null;
+            this.password = null;
+            this.name = null;
         }
     }
 
@@ -73,10 +73,12 @@ namespace PacketClass
     public class Login : Packet
     {
         public string userId;
+        public string password;
 
         public Login()
         {
             this.userId = null;
+            this.password = null;
         }
     }
 }

@@ -26,29 +26,33 @@ namespace teamProject_00
 
         public void Send()
         {
-            this.m_networkStream.Write(this.sendBuffer, 0, this.sendBuffer.Length);
-            this.m_networkStream.Flush();
-
-            for (int i = 0; i < 1024 * 4; i++)
+            try
             {
-                this.sendBuffer[i] = 0;
+                this.m_networkStream.Write(this.sendBuffer, 0, this.sendBuffer.Length);
+                this.m_networkStream.Flush();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("데이터 전송 중 오류가 발생했습니다: " + ex.Message);
+                m_bConnect = false;
+            }
+            finally
+            {
+                for (int i = 0; i < 1024 * 4; i++)
+                {
+                    this.sendBuffer[i] = 0;
+                }
             }
         }
 
         public signupForm(TcpClient client, NetworkStream networkStream)
         {
             InitializeComponent();
-
             this.m_client = client;
             this.m_networkStream = networkStream;
             this.m_bConnect = client.Connected;
-
-            if (!this.m_bConnect)
-            {
-                MessageBox.Show("서버에 연결되어 있지 않습니다.");
-                return;
-            }
         }
+
 
         private void signupForm_Load(object sender, EventArgs e)
         {
@@ -67,20 +71,23 @@ namespace teamProject_00
             signUp.type = (int)PacketType.회원가입;
             signUp.userId = txt_ID.Text;
             signUp.password = txt_PWD.Text;
+            signUp.name = txt_name.Text;
 
             Packet.Serialize(signUp).CopyTo(this.sendBuffer, 0);
             this.Send();
 
-            loginForm login = new loginForm();
+            loginForm login = new loginForm(this.m_client, this.m_networkStream);
             login.Show();
             this.Hide();
         }
 
+
         private void btn_exit_Click(object sender, EventArgs e)
         {
-            loginForm login = new loginForm();
+            loginForm login = new loginForm(this.m_client, this.m_networkStream);
             login.Show();
             this.Hide();
         }
+
     }
 }

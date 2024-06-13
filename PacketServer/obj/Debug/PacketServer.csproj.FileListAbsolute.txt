@@ -11,3 +11,16 @@ C:\Users\705lo\OneDrive\바탕 화면\PacketServer\obj\Debug\PacketServer.csproj
 C:\Users\705lo\OneDrive\바탕 화면\PacketServer\obj\Debug\PacketServer.csproj.CopyComplete
 C:\Users\705lo\OneDrive\바탕 화면\PacketServer\obj\Debug\PacketServer.exe
 C:\Users\705lo\OneDrive\바탕 화면\PacketServer\obj\Debug\PacketServer.pdb
+C:\Users\705lo\OneDrive\바탕 화면\team\PacketServer\bin\Debug\PacketServer.exe.config
+C:\Users\705lo\OneDrive\바탕 화면\team\PacketServer\bin\Debug\PacketServer.exe
+C:\Users\705lo\OneDrive\바탕 화면\team\PacketServer\bin\Debug\PacketServer.pdb
+C:\Users\705lo\OneDrive\바탕 화면\team\PacketServer\bin\Debug\Packet.dll
+C:\Users\705lo\OneDrive\바탕 화면\team\PacketServer\bin\Debug\Packet.pdb
+C:\Users\705lo\OneDrive\바탕 화면\team\PacketServer\obj\Debug\PacketServer.csproj.AssemblyReference.cache
+C:\Users\705lo\OneDrive\바탕 화면\team\PacketServer\obj\Debug\PacketServer.csproj.SuggestedBindingRedirects.cache
+C:\Users\705lo\OneDrive\바탕 화면\team\PacketServer\obj\Debug\PacketServer.Properties.Resources.resources
+C:\Users\705lo\OneDrive\바탕 화면\team\PacketServer\obj\Debug\PacketServer.csproj.GenerateResource.cache
+C:\Users\705lo\OneDrive\바탕 화면\team\PacketServer\obj\Debug\PacketServer.csproj.CoreCompileInputs.cache
+C:\Users\705lo\OneDrive\바탕 화면\team\PacketServer\obj\Debug\PacketServer.csproj.CopyComplete
+C:\Users\705lo\OneDrive\바탕 화면\team\PacketServer\obj\Debug\PacketServer.exe
+C:\Users\705lo\OneDrive\바탕 화면\team\PacketServer\obj\Debug\PacketServer.pdb

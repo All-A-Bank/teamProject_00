@@ -32,7 +32,7 @@
             this.btn_budget = new System.Windows.Forms.Button();
             this.btn_report = new System.Windows.Forms.Button();
             this.label_name = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
+            this.lbl_name = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
@@ -57,10 +57,10 @@
             // 
             // btn_InOut
             // 
-            this.btn_InOut.Location = new System.Drawing.Point(720, 81);
-            this.btn_InOut.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.btn_InOut.Location = new System.Drawing.Point(504, 54);
+            this.btn_InOut.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btn_InOut.Name = "btn_InOut";
-            this.btn_InOut.Size = new System.Drawing.Size(160, 74);
+            this.btn_InOut.Size = new System.Drawing.Size(112, 49);
             this.btn_InOut.TabIndex = 0;
             this.btn_InOut.Text = "수입 / 지출";
             this.btn_InOut.UseVisualStyleBackColor = true;
@@ -68,10 +68,10 @@
             // 
             // btn_budget
             // 
-            this.btn_budget.Location = new System.Drawing.Point(720, 195);
-            this.btn_budget.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.btn_budget.Location = new System.Drawing.Point(504, 130);
+            this.btn_budget.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btn_budget.Name = "btn_budget";
-            this.btn_budget.Size = new System.Drawing.Size(160, 57);
+            this.btn_budget.Size = new System.Drawing.Size(112, 38);
             this.btn_budget.TabIndex = 1;
             this.btn_budget.Text = "예산";
             this.btn_budget.UseVisualStyleBackColor = true;
@@ -79,10 +79,10 @@
             // 
             // btn_report
             // 
-            this.btn_report.Location = new System.Drawing.Point(720, 279);
-            this.btn_report.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.btn_report.Location = new System.Drawing.Point(504, 186);
+            this.btn_report.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btn_report.Name = "btn_report";
-            this.btn_report.Size = new System.Drawing.Size(160, 45);
+            this.btn_report.Size = new System.Drawing.Size(112, 30);
             this.btn_report.TabIndex = 2;
             this.btn_report.Text = "보고서";
             this.btn_report.UseVisualStyleBackColor = true;
@@ -91,29 +91,26 @@
             // label_name
             // 
             this.label_name.AutoSize = true;
-            this.label_name.Location = new System.Drawing.Point(783, 10);
-            this.label_name.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label_name.Location = new System.Drawing.Point(549, 9);
             this.label_name.Name = "label_name";
-            this.label_name.Size = new System.Drawing.Size(0, 18);
+            this.label_name.Size = new System.Drawing.Size(0, 12);
             this.label_name.TabIndex = 4;
             // 
-            // label1
+            // lbl_name
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(716, 10);
-            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(71, 18);
-            this.label1.TabIndex = 5;
-            this.label1.Text = "name : ";
+            this.lbl_name.AutoSize = true;
+            this.lbl_name.Location = new System.Drawing.Point(502, 9);
+            this.lbl_name.Name = "lbl_name";
+            this.lbl_name.Size = new System.Drawing.Size(49, 12);
+            this.lbl_name.TabIndex = 5;
+            this.lbl_name.Text = "name : ";
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(26, 66);
-            this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label2.Location = new System.Drawing.Point(18, 44);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(62, 18);
+            this.label2.Size = new System.Drawing.Size(41, 12);
             this.label2.TabIndex = 6;
             this.label2.Text = "잔액 : ";
             // 
@@ -124,11 +121,12 @@
             // dataGridView1
             // 
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView1.Location = new System.Drawing.Point(674, 392);
+            this.dataGridView1.Location = new System.Drawing.Point(472, 261);
+            this.dataGridView1.Margin = new System.Windows.Forms.Padding(2);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.RowHeadersWidth = 62;
             this.dataGridView1.RowTemplate.Height = 30;
-            this.dataGridView1.Size = new System.Drawing.Size(491, 143);
+            this.dataGridView1.Size = new System.Drawing.Size(344, 95);
             this.dataGridView1.TabIndex = 7;
             // 
             // listView1
@@ -140,10 +138,9 @@
             this.description,
             this.date});
             this.listView1.HideSelection = false;
-            this.listView1.Location = new System.Drawing.Point(29, 151);
-            this.listView1.Margin = new System.Windows.Forms.Padding(4);
+            this.listView1.Location = new System.Drawing.Point(20, 101);
             this.listView1.Name = "listView1";
-            this.listView1.Size = new System.Drawing.Size(565, 195);
+            this.listView1.Size = new System.Drawing.Size(397, 131);
             this.listView1.TabIndex = 8;
             this.listView1.UseCompatibleStateImageBehavior = false;
             this.listView1.View = System.Windows.Forms.View.Details;
@@ -182,10 +179,9 @@
             this.columnHeader4,
             this.columnHeader5});
             this.listView2.HideSelection = false;
-            this.listView2.Location = new System.Drawing.Point(29, 372);
-            this.listView2.Margin = new System.Windows.Forms.Padding(4);
+            this.listView2.Location = new System.Drawing.Point(20, 248);
             this.listView2.Name = "listView2";
-            this.listView2.Size = new System.Drawing.Size(565, 195);
+            this.listView2.Size = new System.Drawing.Size(397, 131);
             this.listView2.TabIndex = 9;
             this.listView2.UseCompatibleStateImageBehavior = false;
             this.listView2.View = System.Windows.Forms.View.Details;
@@ -218,44 +214,46 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(26, 129);
+            this.label3.Location = new System.Drawing.Point(18, 86);
+            this.label3.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(44, 18);
+            this.label3.Size = new System.Drawing.Size(29, 12);
             this.label3.TabIndex = 10;
             this.label3.Text = "지출";
             // 
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(26, 350);
+            this.label4.Location = new System.Drawing.Point(18, 233);
+            this.label4.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(44, 18);
+            this.label4.Size = new System.Drawing.Size(29, 12);
             this.label4.TabIndex = 11;
             this.label4.Text = "수입";
             // 
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(26, 34);
-            this.label5.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label5.Location = new System.Drawing.Point(18, 23);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(62, 18);
+            this.label5.Size = new System.Drawing.Size(41, 12);
             this.label5.TabIndex = 13;
             this.label5.Text = "날짜 : ";
             // 
             // nowDate
             // 
             this.nowDate.AutoSize = true;
-            this.nowDate.Location = new System.Drawing.Point(95, 34);
+            this.nowDate.Location = new System.Drawing.Point(66, 23);
+            this.nowDate.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.nowDate.Name = "nowDate";
-            this.nowDate.Size = new System.Drawing.Size(0, 18);
+            this.nowDate.Size = new System.Drawing.Size(0, 12);
             this.nowDate.TabIndex = 14;
             // 
             // mainForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 18F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1211, 629);
+            this.ClientSize = new System.Drawing.Size(848, 419);
             this.Controls.Add(this.nowDate);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.label4);
@@ -264,12 +262,12 @@
             this.Controls.Add(this.listView1);
             this.Controls.Add(this.dataGridView1);
             this.Controls.Add(this.label2);
-            this.Controls.Add(this.label1);
+            this.Controls.Add(this.lbl_name);
             this.Controls.Add(this.label_name);
             this.Controls.Add(this.btn_report);
             this.Controls.Add(this.btn_budget);
             this.Controls.Add(this.btn_InOut);
-            this.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.Name = "mainForm";
             this.Text = "main_Form";
             this.Load += new System.EventHandler(this.mainForm_Load);
@@ -285,7 +283,7 @@
         private System.Windows.Forms.Button btn_budget;
         private System.Windows.Forms.Button btn_report;
         private System.Windows.Forms.Label label_name;
-        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label lbl_name;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog1;
         private System.Windows.Forms.DataGridView dataGridView1;

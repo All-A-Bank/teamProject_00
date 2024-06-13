@@ -11,6 +11,8 @@ using System.Net.Sockets;
 using System.Threading;
 using System.Xml.Linq;
 using PacketClass;
+using System.IO;
+using System.Runtime.InteropServices.ComTypes;
 
 namespace PacketServer
 {
@@ -42,6 +44,7 @@ namespace PacketServer
             personTable.Columns.Add("person_id", typeof(int)).AutoIncrement = true;
             personTable.Columns.Add("userId", typeof(string));
             personTable.Columns.Add("password", typeof(string));
+            personTable.Columns.Add("name", typeof(string));
             personTable.PrimaryKey = new DataColumn[] { personTable.Columns["person_id"] };
 
             // 카테고리
@@ -151,28 +154,96 @@ namespace PacketServer
                     case (int)PacketType.회원가입:
                         {
                             this.m_signUpClass = (SignUp)Packet.Desserialize(this.readBuffer);
-                            this.txt_server_state.AppendText("회원가입 패킷 데이터: " + this.m_signUpClass.userId + ", " + this.m_signUpClass.password + "\r\n");
+
                             this.Invoke(new MethodInvoker(delegate ()
                             {
-                                this.txt_server_state.AppendText("패킷 전송 성공. " + "SignUp Class Data is " + this.m_signUpClass.userId + " " + this.m_signUpClass.password  + "\r\n");
-                                dataSet.Tables["Person"].Rows.Add(null, this.m_signUpClass.userId, this.m_signUpClass.password);
+                                this.txt_server_state.AppendText("회원가입 Request 성공. " + "SignUp Class Data is " + this.m_signUpClass.userId + " / " + this.m_signUpClass.password + " / " + this.m_signUpClass.name + "\r\n");
+                                dataSet.Tables["Person"].Rows.Add(null, this.m_signUpClass.userId, this.m_signUpClass.password, this.m_signUpClass.name);
                             }));
                             break;
                         }
+
                     case (int)PacketType.로그인:
                         {
                             this.m_loginClass = (Login)Packet.Desserialize(this.readBuffer);
                             this.Invoke(new MethodInvoker(delegate ()
                             {
-                                this.txt_server_state.AppendText("패킷 전송 성공. " + "Login Class Data is " + this.m_loginClass.userId + "\r\n");
-                                dataSet.Tables["Person"].Rows.Add(null, this.m_loginClass.userId);
+                                bool loginSuccess = checkValidLogin(this.m_loginClass.userId, this.m_loginClass.password);
+
+                                if (loginSuccess)
+                                {
+                                    this.txt_server_state.AppendText("로그인 Request 성공. " + "Login Class Data is " + this.m_loginClass.userId + "\r\n");
+                                    SendLoginSuccessPacket(m_loginClass.userId);
+                                }
+                                else
+                                {
+                                    this.txt_server_state.AppendText("로그인 Request 실패. 잘못된 사용자 ID 또는 비밀번호.\r\n");
+                                    SendErrorPacket("로그인 실패. 아이디 또는 비밀번호가 일치하지 않습니다.");
+                                }
                             }));
                             break;
                         }
 
-
+                    case (int)PacketType.유저이름요청:
+                        {
+                            // 사용자 ID를 기반으로 이름을 조회합니다.
+                            string userId = packet.message;
+                            SendUserNameResponse(userId);
+                            break;
+                        }
                 }
             }
+        }
+
+        private void SendUserNameResponse(string userId)
+        {
+            DataTable personTable = dataSet.Tables["Person"];
+            DataRow[] person = personTable.Select($"userId = '{userId}'");
+
+            Packet responsePacket = new Packet();
+            responsePacket.type = (int)PacketType.유저이름요청;
+
+            responsePacket.message = person[0]["name"].ToString();
+
+            byte[] serializedData = Packet.Serialize(responsePacket);
+            this.m_networkstream.Write(serializedData, 0, serializedData.Length);
+            this.m_networkstream.Flush();
+        }
+
+        private bool checkValidLogin(string userId, string password)
+        {
+            DataTable personTable = dataSet.Tables["Person"];
+
+            DataRow[] person = personTable.Select($"userId = '{userId}' AND password = '{password}'");
+
+            return person.Length > 0;
+        }
+
+        private void SendLoginSuccessPacket(string userId)
+        {
+            DataTable personTable = dataSet.Tables["Person"];
+            DataRow[] person = personTable.Select($"userId = '{userId}'");
+            string userName = person[0]["name"].ToString();
+
+            Packet loginSuccessPacket = new Packet();
+            loginSuccessPacket.type = (int)PacketType.로그인;
+            loginSuccessPacket.message = userId;
+
+            byte[] serializedData = Packet.Serialize(loginSuccessPacket);
+            this.m_networkstream.Write(serializedData, 0, serializedData.Length);
+            this.m_networkstream.Flush();
+        }
+
+        private void SendErrorPacket(string errorMessage)
+        {
+            Packet errorPacket = new Packet();
+
+            errorPacket.type = (int)PacketType.에러;
+            errorPacket.errorMessage = errorMessage;
+
+            byte[] serializedData = Packet.Serialize(errorPacket);
+            this.m_networkstream.Write(serializedData, 0, serializedData.Length);
+            this.m_networkstream.Flush();
         }
 
         private void Form1_Load(object sender, EventArgs e)
