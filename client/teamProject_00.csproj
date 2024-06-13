@@ -70,11 +70,17 @@
     <Compile Include="ExpenseForm.Designer.cs">
       <DependentUpon>ExpenseForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="initForm.cs">
+    <Compile Include="loginForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="initForm.Designer.cs">
-      <DependentUpon>initForm.cs</DependentUpon>
+    <Compile Include="loginForm.Designer.cs">
+      <DependentUpon>loginForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="InOutAddForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="InOutAddForm.Designer.cs">
+      <DependentUpon>InOutAddForm.cs</DependentUpon>
     </Compile>
     <Compile Include="mainForm.cs">
       <SubType>Form</SubType>
@@ -102,6 +108,12 @@
     <Compile Include="ReportForm.Designer.cs">
       <DependentUpon>ReportForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="signupForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="signupForm.Designer.cs">
+      <DependentUpon>signupForm.cs</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="BudgetForm.resx">
       <DependentUpon>BudgetForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -114,8 +126,11 @@
     <EmbeddedResource Include="ExpenseForm.resx">
       <DependentUpon>ExpenseForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="initForm.resx">
-      <DependentUpon>initForm.cs</DependentUpon>
+    <EmbeddedResource Include="loginForm.resx">
+      <DependentUpon>loginForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="InOutAddForm.resx">
+      <DependentUpon>InOutAddForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="InOutForm.resx">
       <DependentUpon>InOutForm.cs</DependentUpon>
@@ -134,6 +149,9 @@
     </Compile>
     <EmbeddedResource Include="ReportForm.resx">
       <DependentUpon>ReportForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="signupForm.resx">
+      <DependentUpon>signupForm.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="DataSet1.xsc">
       <DependentUpon>DataSet1.xsd</DependentUpon>
@@ -158,6 +176,16 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Packet\PacketClass.csproj">
+      <Project>{1b9ed51c-9df8-4e3f-b255-2a5fd33550fa}</Project>
+      <Name>PacketClass</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\server\teamproject_server\teamproject_server.csproj">
+      <Project>{868f5790-8aa7-4643-8e93-9232f4ba5483}</Project>
+      <Name>teamproject_server</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

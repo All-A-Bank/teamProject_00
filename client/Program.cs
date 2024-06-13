@@ -16,7 +16,7 @@ namespace teamProject_00
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new initForm());
+            Application.Run(new loginForm());
         }
     }
 }

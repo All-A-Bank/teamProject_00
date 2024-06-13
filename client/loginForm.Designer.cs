@@ -1,6 +1,6 @@
 ﻿namespace teamProject_00
 {
-    partial class initForm
+    partial class loginForm
     {
         /// <summary>
         /// 필수 디자이너 변수입니다.
@@ -30,7 +30,9 @@
         {
             this.label1 = new System.Windows.Forms.Label();
             this.button_Init = new System.Windows.Forms.Button();
-            this.textBox_name = new System.Windows.Forms.TextBox();
+            this.textBox_ID = new System.Windows.Forms.TextBox();
+            this.textBox_PWD = new System.Windows.Forms.TextBox();
+            this.btn_signup = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // label1
@@ -44,35 +46,58 @@
             // 
             // button_Init
             // 
-            this.button_Init.Location = new System.Drawing.Point(272, 232);
+            this.button_Init.Location = new System.Drawing.Point(353, 232);
             this.button_Init.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.button_Init.Name = "button_Init";
             this.button_Init.Size = new System.Drawing.Size(125, 51);
             this.button_Init.TabIndex = 3;
-            this.button_Init.Text = "들어가기";
+            this.button_Init.Text = "로그인";
             this.button_Init.UseVisualStyleBackColor = true;
             this.button_Init.Click += new System.EventHandler(this.button1_Click);
             // 
-            // textBox_name
+            // textBox_ID
             // 
-            this.textBox_name.Location = new System.Drawing.Point(240, 148);
-            this.textBox_name.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.textBox_name.Name = "textBox_name";
-            this.textBox_name.Size = new System.Drawing.Size(176, 21);
-            this.textBox_name.TabIndex = 2;
-            this.textBox_name.Text = "이름을 입력해주세요!";
+            this.textBox_ID.Location = new System.Drawing.Point(247, 116);
+            this.textBox_ID.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.textBox_ID.Name = "textBox_ID";
+            this.textBox_ID.Size = new System.Drawing.Size(176, 21);
+            this.textBox_ID.TabIndex = 2;
+            this.textBox_ID.Text = "ID 입력하세요.";
             // 
-            // initForm
+            // textBox_PWD
+            // 
+            this.textBox_PWD.Location = new System.Drawing.Point(247, 162);
+            this.textBox_PWD.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.textBox_PWD.Name = "textBox_PWD";
+            this.textBox_PWD.Size = new System.Drawing.Size(176, 21);
+            this.textBox_PWD.TabIndex = 4;
+            this.textBox_PWD.Text = "비밀번호 입력하세요.";
+            // 
+            // btn_signup
+            // 
+            this.btn_signup.Location = new System.Drawing.Point(172, 232);
+            this.btn_signup.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.btn_signup.Name = "btn_signup";
+            this.btn_signup.Size = new System.Drawing.Size(125, 51);
+            this.btn_signup.TabIndex = 5;
+            this.btn_signup.Text = "회원가입";
+            this.btn_signup.UseVisualStyleBackColor = true;
+            this.btn_signup.Click += new System.EventHandler(this.btn_signup_Click);
+            // 
+            // loginForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(700, 360);
-            this.Controls.Add(this.textBox_name);
+            this.Controls.Add(this.btn_signup);
+            this.Controls.Add(this.textBox_PWD);
+            this.Controls.Add(this.textBox_ID);
             this.Controls.Add(this.button_Init);
             this.Controls.Add(this.label1);
             this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.Name = "initForm";
+            this.Name = "loginForm";
             this.Text = "initial_Form";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.initForm_FormClosed);
             this.Load += new System.EventHandler(this.initForm_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -83,7 +108,9 @@
 
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button button_Init;
-        private System.Windows.Forms.TextBox textBox_name;
+        private System.Windows.Forms.TextBox textBox_ID;
+        private System.Windows.Forms.TextBox textBox_PWD;
+        private System.Windows.Forms.Button btn_signup;
     }
 }
 

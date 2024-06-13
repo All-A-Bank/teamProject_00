@@ -52,13 +52,14 @@
             this.chart1.ChartAreas.Add(chartArea1);
             legend1.Name = "Legend1";
             this.chart1.Legends.Add(legend1);
-            this.chart1.Location = new System.Drawing.Point(12, 5);
+            this.chart1.Location = new System.Drawing.Point(15, 6);
+            this.chart1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.chart1.Name = "chart1";
             series1.ChartArea = "ChartArea1";
             series1.Legend = "Legend1";
             series1.Name = "Series1";
             this.chart1.Series.Add(series1);
-            this.chart1.Size = new System.Drawing.Size(300, 300);
+            this.chart1.Size = new System.Drawing.Size(375, 360);
             this.chart1.TabIndex = 0;
             this.chart1.Text = "chart1";
             this.chart1.Visible = false;
@@ -69,9 +70,11 @@
             this.groupBox1.Controls.Add(this.rdo_all);
             this.groupBox1.Controls.Add(this.rdo_out);
             this.groupBox1.Controls.Add(this.rdo_in);
-            this.groupBox1.Location = new System.Drawing.Point(12, 366);
+            this.groupBox1.Location = new System.Drawing.Point(15, 439);
+            this.groupBox1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(336, 69);
+            this.groupBox1.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.groupBox1.Size = new System.Drawing.Size(420, 83);
             this.groupBox1.TabIndex = 1;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "groupBox1";
@@ -79,9 +82,10 @@
             // rdo_all
             // 
             this.rdo_all.AutoSize = true;
-            this.rdo_all.Location = new System.Drawing.Point(144, 24);
+            this.rdo_all.Location = new System.Drawing.Point(180, 29);
+            this.rdo_all.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.rdo_all.Name = "rdo_all";
-            this.rdo_all.Size = new System.Drawing.Size(58, 19);
+            this.rdo_all.Size = new System.Drawing.Size(69, 22);
             this.rdo_all.TabIndex = 2;
             this.rdo_all.TabStop = true;
             this.rdo_all.Text = "전체";
@@ -90,9 +94,10 @@
             // rdo_out
             // 
             this.rdo_out.AutoSize = true;
-            this.rdo_out.Location = new System.Drawing.Point(80, 24);
+            this.rdo_out.Location = new System.Drawing.Point(100, 29);
+            this.rdo_out.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.rdo_out.Name = "rdo_out";
-            this.rdo_out.Size = new System.Drawing.Size(58, 19);
+            this.rdo_out.Size = new System.Drawing.Size(69, 22);
             this.rdo_out.TabIndex = 1;
             this.rdo_out.TabStop = true;
             this.rdo_out.Text = "지출";
@@ -101,9 +106,10 @@
             // rdo_in
             // 
             this.rdo_in.AutoSize = true;
-            this.rdo_in.Location = new System.Drawing.Point(16, 24);
+            this.rdo_in.Location = new System.Drawing.Point(20, 29);
+            this.rdo_in.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.rdo_in.Name = "rdo_in";
-            this.rdo_in.Size = new System.Drawing.Size(58, 19);
+            this.rdo_in.Size = new System.Drawing.Size(69, 22);
             this.rdo_in.TabIndex = 0;
             this.rdo_in.TabStop = true;
             this.rdo_in.Text = "수입";
@@ -111,25 +117,28 @@
             // 
             // dateTimePicker1
             // 
-            this.dateTimePicker1.Location = new System.Drawing.Point(12, 311);
+            this.dateTimePicker1.Location = new System.Drawing.Point(15, 373);
+            this.dateTimePicker1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.dateTimePicker1.Name = "dateTimePicker1";
-            this.dateTimePicker1.Size = new System.Drawing.Size(200, 25);
+            this.dateTimePicker1.Size = new System.Drawing.Size(249, 28);
             this.dateTimePicker1.TabIndex = 2;
             // 
             // listView1
             // 
             this.listView1.HideSelection = false;
-            this.listView1.Location = new System.Drawing.Point(401, 34);
+            this.listView1.Location = new System.Drawing.Point(501, 41);
+            this.listView1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.listView1.Name = "listView1";
-            this.listView1.Size = new System.Drawing.Size(381, 394);
+            this.listView1.Size = new System.Drawing.Size(475, 472);
             this.listView1.TabIndex = 3;
             this.listView1.UseCompatibleStateImageBehavior = false;
             // 
             // btn_exit
             // 
-            this.btn_exit.Location = new System.Drawing.Point(707, 5);
+            this.btn_exit.Location = new System.Drawing.Point(884, 6);
+            this.btn_exit.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.btn_exit.Name = "btn_exit";
-            this.btn_exit.Size = new System.Drawing.Size(75, 23);
+            this.btn_exit.Size = new System.Drawing.Size(94, 28);
             this.btn_exit.TabIndex = 4;
             this.btn_exit.Text = "뒤로";
             this.btn_exit.UseVisualStyleBackColor = true;
@@ -137,23 +146,26 @@
             // 
             // txtValue
             // 
-            this.txtValue.Location = new System.Drawing.Point(481, 6);
+            this.txtValue.Location = new System.Drawing.Point(601, 7);
+            this.txtValue.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.txtValue.Name = "txtValue";
-            this.txtValue.Size = new System.Drawing.Size(100, 25);
+            this.txtValue.Size = new System.Drawing.Size(124, 28);
             this.txtValue.TabIndex = 3;
             // 
             // txtCategory
             // 
-            this.txtCategory.Location = new System.Drawing.Point(375, 5);
+            this.txtCategory.Location = new System.Drawing.Point(469, 6);
+            this.txtCategory.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.txtCategory.Name = "txtCategory";
-            this.txtCategory.Size = new System.Drawing.Size(100, 25);
+            this.txtCategory.Size = new System.Drawing.Size(124, 28);
             this.txtCategory.TabIndex = 4;
             // 
             // btnAddCategory
             // 
-            this.btnAddCategory.Location = new System.Drawing.Point(587, 8);
+            this.btnAddCategory.Location = new System.Drawing.Point(734, 10);
+            this.btnAddCategory.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.btnAddCategory.Name = "btnAddCategory";
-            this.btnAddCategory.Size = new System.Drawing.Size(114, 23);
+            this.btnAddCategory.Size = new System.Drawing.Size(142, 28);
             this.btnAddCategory.TabIndex = 5;
             this.btnAddCategory.Text = "카테고리 추가";
             this.btnAddCategory.UseVisualStyleBackColor = true;
@@ -161,9 +173,9 @@
             // 
             // chart_Form
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(1000, 540);
             this.Controls.Add(this.txtValue);
             this.Controls.Add(this.txtCategory);
             this.Controls.Add(this.btnAddCategory);
@@ -172,8 +184,10 @@
             this.Controls.Add(this.listView1);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.chart1);
+            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Name = "chart_Form";
             this.Text = "chartForm";
+            this.Load += new System.EventHandler(this.chart_Form_Load);
             ((System.ComponentModel.ISupportInitialize)(this.chart1)).EndInit();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();

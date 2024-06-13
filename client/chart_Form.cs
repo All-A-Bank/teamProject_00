@@ -133,5 +133,9 @@ namespace teamProject_00
             }
         }
 
+        private void chart_Form_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }
