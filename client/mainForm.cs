@@ -22,6 +22,9 @@ namespace teamProject_00
 
         private byte[] readBuffer = new byte[1024 * 4];
 
+        public int incomeCnt = 1;
+        public int expenseCnt = 1;
+
         public mainForm(NetworkStream networkStream, TcpClient client, string userId)
         {
             InitializeComponent();
@@ -62,13 +65,14 @@ namespace teamProject_00
         private void mainForm_Load(object sender, EventArgs e)
         {
             RequestUserName();
+            SetCurrentDate();
         }
 
         private void RequestUserName()
         {
             Packet requestPacket = new Packet();
             requestPacket.type = (int)PacketType.유저이름요청;
-            requestPacket.message = this.userId;
+            requestPacket.message.Add(this.userId);
 
             byte[] serializedData = Packet.Serialize(requestPacket);
             this.m_networkStream.Write(serializedData, 0, serializedData.Length);
@@ -86,12 +90,133 @@ namespace teamProject_00
 
                 if ((PacketType)responsePacket.type == PacketType.유저이름요청)
                 {
-                    string userName = responsePacket.message;
+                    string userName = responsePacket.message[0];
                     this.Invoke(new MethodInvoker(delegate ()
                     {
                         label_name.Text = userName;
                     }));
                 }
+            }
+        }
+
+        private void SetCurrentDate()
+        {
+            this.Invoke(new MethodInvoker(delegate ()
+            {
+                nowDate.Text = DateTime.Now.ToString("yyyy-MM-dd");
+            }));
+
+            string selectedDate = DateTime.Now.ToString("yyyy-MM-dd");
+            RequestIncomeList(selectedDate);
+            RequestExpenseList(selectedDate);
+        }
+
+        private void RequestIncomeList(string date)
+        {
+            Packet requestPacket = new Packet();
+            requestPacket.type = (int)PacketType.수입지출목록요청;
+            requestPacket.message.Add(this.userId + "," + date);
+
+            byte[] serializedData = Packet.Serialize(requestPacket);
+            this.m_networkStream.Write(serializedData, 0, serializedData.Length);
+            this.m_networkStream.Flush();
+
+            Task.Run(() => ReceiveIncomeListResponse());
+        }
+
+        private void RequestExpenseList(string date)
+        {
+            Packet requestPacket = new Packet();
+            requestPacket.type = (int)PacketType.수입지출목록요청;
+            requestPacket.message.Add(this.userId + "," + date);
+
+            byte[] serializedData = Packet.Serialize(requestPacket);
+            this.m_networkStream.Write(serializedData, 0, serializedData.Length);
+            this.m_networkStream.Flush();
+
+            Task.Run(() => ReceiveExpenseListResponse());
+        }
+
+        private void ReceiveIncomeListResponse()
+        {
+            int bytesRead = this.m_networkStream.Read(this.readBuffer, 0, this.readBuffer.Length);
+            if (bytesRead > 0)
+            {
+                Packet responsePacket = (Packet)Packet.Desserialize(this.readBuffer);
+
+                if ((PacketType)responsePacket.type == PacketType.수입지출목록요청)
+                {
+                    List<string> msgList = responsePacket.message;
+
+                    foreach (string msg in msgList)
+                    {
+                        string[] data = msg.Split(',');
+
+                        string categoryId = data[0];
+                        string categoryName = GetCategoryName(categoryId); // Implement this method to get category name from ID
+                        string amount = data[1];
+                        string description = data[2];
+                        string date = data[3];
+
+                        ListViewItem lvwItem = new ListViewItem(categoryName);
+                        lvwItem.SubItems.Add(amount);
+                        lvwItem.SubItems.Add(description);
+                        lvwItem.SubItems.Add(date);
+
+                        lvwIncome.Items.Add(lvwItem);
+                    }
+                }
+            }
+        }
+
+        private void ReceiveExpenseListResponse()
+        {
+            int bytesRead = this.m_networkStream.Read(this.readBuffer, 0, this.readBuffer.Length);
+            if (bytesRead > 0)
+            {
+                Packet responsePacket = (Packet)Packet.Desserialize(this.readBuffer);
+
+                if ((PacketType)responsePacket.type == PacketType.수입지출목록요청)
+                {
+                    List<string> msgList = responsePacket.message;
+
+                    foreach (string msg in msgList)
+                    {
+                        string[] data = msg.Split(',');
+
+                        string categoryId = data[0];
+                        string categoryName = GetCategoryName(categoryId); // Implement this method to get category name from ID
+                        string amount = data[1];
+                        string description = data[2];
+                        string date = data[3];
+
+                        ListViewItem lvwItem = new ListViewItem(categoryName);
+                        lvwItem.SubItems.Add(amount);
+                        lvwItem.SubItems.Add(description);
+                        lvwItem.SubItems.Add(date);
+
+                        lvwExpense.Items.Add(lvwItem);
+                    }
+                }
+            }
+        }
+
+        private string GetCategoryName(string categoryId)
+        {
+            switch (categoryId)
+            {
+                case "1":
+                    return "식비";
+                case "2":
+                    return "교통비";
+                case "3":
+                    return "여가생활";
+                case "4":
+                    return "급여";
+                case "5":
+                    return "연금";
+                default:
+                    return "기타";
             }
         }
     }

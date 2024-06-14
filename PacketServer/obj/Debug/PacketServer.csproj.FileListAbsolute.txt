@@ -24,3 +24,16 @@ C:\Users\705lo\OneDrive\바탕 화면\team\PacketServer\obj\Debug\PacketServer.c
 C:\Users\705lo\OneDrive\바탕 화면\team\PacketServer\obj\Debug\PacketServer.csproj.CopyComplete
 C:\Users\705lo\OneDrive\바탕 화면\team\PacketServer\obj\Debug\PacketServer.exe
 C:\Users\705lo\OneDrive\바탕 화면\team\PacketServer\obj\Debug\PacketServer.pdb
+C:\Users\user\Desktop\응소실\PacketServer\bin\Debug\PacketServer.exe.config
+C:\Users\user\Desktop\응소실\PacketServer\bin\Debug\PacketServer.exe
+C:\Users\user\Desktop\응소실\PacketServer\bin\Debug\PacketServer.pdb
+C:\Users\user\Desktop\응소실\PacketServer\bin\Debug\Packet.dll
+C:\Users\user\Desktop\응소실\PacketServer\bin\Debug\Packet.pdb
+C:\Users\user\Desktop\응소실\PacketServer\obj\Debug\PacketServer.csproj.AssemblyReference.cache
+C:\Users\user\Desktop\응소실\PacketServer\obj\Debug\PacketServer.Properties.Resources.resources
+C:\Users\user\Desktop\응소실\PacketServer\obj\Debug\PacketServer.csproj.GenerateResource.cache
+C:\Users\user\Desktop\응소실\PacketServer\obj\Debug\PacketServer.csproj.CoreCompileInputs.cache
+C:\Users\user\Desktop\응소실\PacketServer\obj\Debug\PacketSe.3600A67C.Up2Date
+C:\Users\user\Desktop\응소실\PacketServer\obj\Debug\PacketServer.exe
+C:\Users\user\Desktop\응소실\PacketServer\obj\Debug\PacketServer.pdb
+C:\Users\user\Desktop\응소실\PacketServer\obj\Debug\PacketServer.Form1.resources

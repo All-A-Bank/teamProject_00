@@ -38,18 +38,19 @@
             // label1
             // 
             this.label1.Font = new System.Drawing.Font("굴림", 40F);
-            this.label1.Location = new System.Drawing.Point(198, 45);
+            this.label1.Location = new System.Drawing.Point(283, 68);
+            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(280, 56);
+            this.label1.Size = new System.Drawing.Size(400, 84);
             this.label1.TabIndex = 0;
             this.label1.Text = "All A Bank";
-            // 
+              // 
             // button_Init
             // 
-            this.button_Init.Location = new System.Drawing.Point(353, 232);
-            this.button_Init.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.button_Init.Location = new System.Drawing.Point(504, 348);
+            this.button_Init.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.button_Init.Name = "button_Init";
-            this.button_Init.Size = new System.Drawing.Size(125, 51);
+            this.button_Init.Size = new System.Drawing.Size(179, 76);
             this.button_Init.TabIndex = 3;
             this.button_Init.Text = "로그인";
             this.button_Init.UseVisualStyleBackColor = true;
@@ -57,28 +58,28 @@
             // 
             // textBox_ID
             // 
-            this.textBox_ID.Location = new System.Drawing.Point(247, 116);
-            this.textBox_ID.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.textBox_ID.Location = new System.Drawing.Point(353, 174);
+            this.textBox_ID.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.textBox_ID.Name = "textBox_ID";
-            this.textBox_ID.Size = new System.Drawing.Size(176, 21);
+            this.textBox_ID.Size = new System.Drawing.Size(250, 28);
             this.textBox_ID.TabIndex = 2;
             this.textBox_ID.Text = "ID 입력하세요.";
             // 
             // textBox_PWD
             // 
-            this.textBox_PWD.Location = new System.Drawing.Point(247, 162);
-            this.textBox_PWD.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.textBox_PWD.Location = new System.Drawing.Point(353, 243);
+            this.textBox_PWD.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.textBox_PWD.Name = "textBox_PWD";
-            this.textBox_PWD.Size = new System.Drawing.Size(176, 21);
+            this.textBox_PWD.Size = new System.Drawing.Size(250, 28);
             this.textBox_PWD.TabIndex = 4;
             this.textBox_PWD.Text = "비밀번호 입력하세요.";
             // 
             // btn_signup
             // 
-            this.btn_signup.Location = new System.Drawing.Point(172, 232);
-            this.btn_signup.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.btn_signup.Location = new System.Drawing.Point(246, 348);
+            this.btn_signup.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.btn_signup.Name = "btn_signup";
-            this.btn_signup.Size = new System.Drawing.Size(125, 51);
+            this.btn_signup.Size = new System.Drawing.Size(179, 76);
             this.btn_signup.TabIndex = 5;
             this.btn_signup.Text = "회원가입";
             this.btn_signup.UseVisualStyleBackColor = true;
@@ -86,15 +87,15 @@
             // 
             // loginForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(700, 360);
+            this.ClientSize = new System.Drawing.Size(1000, 540);
             this.Controls.Add(this.btn_signup);
             this.Controls.Add(this.textBox_PWD);
             this.Controls.Add(this.textBox_ID);
             this.Controls.Add(this.button_Init);
             this.Controls.Add(this.label1);
-            this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.Name = "loginForm";
             this.Text = "initial_Form";
             this.Load += new System.EventHandler(this.initForm_Load);

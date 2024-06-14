@@ -107,7 +107,7 @@ namespace teamProject_00
                 }
                 else if ((PacketType)responsePacket.type == PacketType.로그인)
                 {
-                    string userId = responsePacket.message;
+                    string userId = responsePacket.message[0];
                     this.Invoke(new MethodInvoker(delegate ()
                     {
                         mainForm main = new mainForm(this.m_networkStream, this.m_client, userId);
@@ -129,5 +129,6 @@ namespace teamProject_00
             signup.Show();
             this.Hide();
         }
+
     }
 }

@@ -10,3 +10,9 @@ C:\Users\705lo\OneDrive\바탕 화면\team\Packet\obj\Debug\PacketClass.csproj.A
 C:\Users\705lo\OneDrive\바탕 화면\team\Packet\obj\Debug\PacketClass.csproj.CoreCompileInputs.cache
 C:\Users\705lo\OneDrive\바탕 화면\team\Packet\obj\Debug\Packet.dll
 C:\Users\705lo\OneDrive\바탕 화면\team\Packet\obj\Debug\Packet.pdb
+C:\Users\user\Desktop\응소실\Packet\bin\Debug\Packet.dll
+C:\Users\user\Desktop\응소실\Packet\bin\Debug\Packet.pdb
+C:\Users\user\Desktop\응소실\Packet\obj\Debug\PacketClass.csproj.AssemblyReference.cache
+C:\Users\user\Desktop\응소실\Packet\obj\Debug\PacketClass.csproj.CoreCompileInputs.cache
+C:\Users\user\Desktop\응소실\Packet\obj\Debug\Packet.dll
+C:\Users\user\Desktop\응소실\Packet\obj\Debug\Packet.pdb

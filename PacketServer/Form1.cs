@@ -30,6 +30,8 @@ namespace PacketServer
 
         public Login m_loginClass;
         public SignUp m_signUpClass;
+        public IncomeAdd m_incomeAdd;
+        public ExpenseAdd m_expenseAdd;
 
         DataSet dataSet;
 
@@ -63,9 +65,10 @@ namespace PacketServer
             budgetsTable.PrimaryKey = new DataColumn[] { budgetsTable.Columns["budget_id"] };
 
             // 지출
-            DataTable expensesTable = new DataTable("Expenses");
+            DataTable expensesTable = new DataTable("Expense");
             expensesTable.Columns.Add("expense_id", typeof(int)).AutoIncrement = true;
             expensesTable.Columns.Add("category_id", typeof(int));
+            expensesTable.Columns.Add("userId", typeof(string));
             expensesTable.Columns.Add("amount", typeof(decimal));
             expensesTable.Columns.Add("description", typeof(string));
             expensesTable.Columns.Add("date", typeof(DateTime));
@@ -75,6 +78,7 @@ namespace PacketServer
             DataTable incomeTable = new DataTable("Income");
             incomeTable.Columns.Add("income_id", typeof(int)).AutoIncrement = true;
             incomeTable.Columns.Add("category_id", typeof(int));
+            incomeTable.Columns.Add("userId", typeof(string));
             incomeTable.Columns.Add("amount", typeof(decimal));
             incomeTable.Columns.Add("description", typeof(string));
             incomeTable.Columns.Add("date", typeof(DateTime));
@@ -90,10 +94,14 @@ namespace PacketServer
             DataRelation categoryBudgetRelation = new DataRelation("CategoryBudget", categoriesTable.Columns["category_id"], budgetsTable.Columns["category_id"]);
             DataRelation categoryExpenseRelation = new DataRelation("CategoryExpense", categoriesTable.Columns["category_id"], expensesTable.Columns["category_id"]);
             DataRelation categoryIncomeRelation = new DataRelation("CategoryIncome", categoriesTable.Columns["category_id"], incomeTable.Columns["category_id"]);
+            DataRelation personIncomeRelation = new DataRelation("PersonIncome", personTable.Columns["userId"], incomeTable.Columns["userId"]);
+            DataRelation personExpenseRelation = new DataRelation("PersonExpense", personTable.Columns["userId"], expensesTable.Columns["userId"]);
 
             dataSet.Relations.Add(categoryBudgetRelation);
             dataSet.Relations.Add(categoryExpenseRelation);
             dataSet.Relations.Add(categoryIncomeRelation);
+            dataSet.Relations.Add(personIncomeRelation);
+            dataSet.Relations.Add(personExpenseRelation);
 
             dataSet.Tables["Categories"].Rows.Add(null, "식비");
             dataSet.Tables["Categories"].Rows.Add(null, "교통비");
@@ -104,6 +112,8 @@ namespace PacketServer
 
 
             dataGridView1.DataSource = dataSet.Tables["Person"];
+            dataGridView2.DataSource = dataSet.Tables["Income"];
+            dataGridView3.DataSource = dataSet.Tables["Expense"];
         }
 
         public void ServerStart()
@@ -187,10 +197,51 @@ namespace PacketServer
                     case (int)PacketType.유저이름요청:
                         {
                             // 사용자 ID를 기반으로 이름을 조회합니다.
-                            string userId = packet.message;
+                            string userId = packet.message[0];
                             SendUserNameResponse(userId);
                             break;
                         }
+
+                    case (int)PacketType.수입추가:
+                        {
+                            this.m_incomeAdd = (IncomeAdd)Packet.Desserialize(this.readBuffer);
+
+                            this.Invoke(new MethodInvoker(delegate ()
+                            {
+                                this.txt_server_state.AppendText("수입추가 Request 성공. " + "IncomeAdd Class Data is " + this.m_incomeAdd.category_id + " / " + this.m_incomeAdd.userId + " / " + this.m_incomeAdd.amount + " / " + this.m_incomeAdd.description + " / " + this.m_incomeAdd.date + "\r\n");
+                                dataSet.Tables["Income"].Rows.Add(null, this.m_incomeAdd.category_id, this.m_incomeAdd.userId ,this.m_incomeAdd.amount, this.m_incomeAdd.description, this.m_incomeAdd.date);
+                            }));
+                            break;
+                        }
+
+                    case (int)PacketType.지출추가:
+                        {
+                            this.m_expenseAdd = (ExpenseAdd)Packet.Desserialize(this.readBuffer);
+
+                            this.Invoke(new MethodInvoker(delegate ()
+                            {
+                                this.txt_server_state.AppendText("지출추가 Request 성공. " + "ExpenseAdd Class Data is " + this.m_expenseAdd.category_id + " / " + this.m_expenseAdd.userId + " / " + this.m_expenseAdd.amount + " / " + this.m_expenseAdd.description + " / " + this.m_expenseAdd.date + "\r\n");
+                                dataSet.Tables["Expense"].Rows.Add(null, this.m_expenseAdd.category_id, this.m_expenseAdd.userId, this.m_expenseAdd.amount, this.m_expenseAdd.description, this.m_expenseAdd.date);
+                            }));
+                            break;
+                        }
+
+                    case (int)PacketType.수입지출목록요청:
+                        {
+                            // packet.message를 DateTime으로 변환
+                            string[] msg = packet.message[0].Split(',');
+                            string userId = msg[0];
+                            string date = msg[1];
+                            
+                            this.txt_server_state.AppendText("수입목록 Response 성공. " + userId + " " + date +  "\r\n");
+
+                            SendIncomeResponse(userId, date);
+                            SendExpenseResponse(userId, date);
+
+                            break;
+                        }
+
+
                 }
             }
         }
@@ -203,7 +254,45 @@ namespace PacketServer
             Packet responsePacket = new Packet();
             responsePacket.type = (int)PacketType.유저이름요청;
 
-            responsePacket.message = person[0]["name"].ToString();
+            responsePacket.message.Add(person[0]["name"].ToString());
+
+            byte[] serializedData = Packet.Serialize(responsePacket);
+            this.m_networkstream.Write(serializedData, 0, serializedData.Length);
+            this.m_networkstream.Flush();
+        }
+
+        private void SendIncomeResponse(string userId, string date)
+        {
+            DataTable incomeTable = dataSet.Tables["Income"];
+            DataRow[] incomeList = incomeTable.Select($"userId = '{userId}' AND CONVERT(date, 'System.String') LIKE '{date}%'");
+            Packet responsePacket = new Packet();
+            responsePacket.type = (int)PacketType.수입지출목록요청;
+
+            foreach (DataRow income in incomeList)
+            {
+                string incomeInfo = $"{income["category_id"]}, {income["amount"]}, {income["description"]}, {income["date"]}";
+                responsePacket.message.Add(incomeInfo);
+            }
+
+
+            byte[] serializedData = Packet.Serialize(responsePacket);
+            this.m_networkstream.Write(serializedData, 0, serializedData.Length);
+            this.m_networkstream.Flush();
+        }
+
+        private void SendExpenseResponse(string userId, string date)
+        {
+            DataTable expensesTable = dataSet.Tables["Expense"];
+            DataRow[] expenseList = expensesTable.Select($"userId = '{userId}' AND CONVERT(date, 'System.String') LIKE '{date}%'");
+            Packet responsePacket = new Packet();
+            responsePacket.type = (int)PacketType.수입지출목록요청;
+
+            foreach (DataRow expense in expenseList)
+            {
+                string expenseInfo = $"{expense["category_id"]}, {expense["amount"]}, {expense["description"]}, {expense["date"]}";
+                responsePacket.message.Add(expenseInfo);
+            }
+
 
             byte[] serializedData = Packet.Serialize(responsePacket);
             this.m_networkstream.Write(serializedData, 0, serializedData.Length);
@@ -221,13 +310,9 @@ namespace PacketServer
 
         private void SendLoginSuccessPacket(string userId)
         {
-            DataTable personTable = dataSet.Tables["Person"];
-            DataRow[] person = personTable.Select($"userId = '{userId}'");
-            string userName = person[0]["name"].ToString();
-
             Packet loginSuccessPacket = new Packet();
             loginSuccessPacket.type = (int)PacketType.로그인;
-            loginSuccessPacket.message = userId;
+            loginSuccessPacket.message.Add(userId);
 
             byte[] serializedData = Packet.Serialize(loginSuccessPacket);
             this.m_networkstream.Write(serializedData, 0, serializedData.Length);
