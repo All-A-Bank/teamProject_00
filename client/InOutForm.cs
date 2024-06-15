@@ -31,6 +31,18 @@ namespace teamProject_00
             this.m_networkStream = networkStream;
             this.m_client = client;
             this.userId = userId;
+
+            lvwExpense.View = View.Details;
+            lvwExpense.Columns.Add("카테고리");
+            lvwExpense.Columns.Add("가격");
+            lvwExpense.Columns.Add("설명");
+            lvwExpense.Columns.Add("날짜");
+
+            lvwIncome.View = View.Details;
+            lvwIncome.Columns.Add("카테고리");
+            lvwIncome.Columns.Add("가격");
+            lvwIncome.Columns.Add("설명");
+            lvwIncome.Columns.Add("날짜");
         }
 
         private void chart_Click(object sender, EventArgs e)
@@ -57,13 +69,14 @@ namespace teamProject_00
 
             string selectedDate = dateTimePicker1.Value.Date.ToString();
 
-            RequestIncomeList(selectedDate);
-            RequestExpenseList(selectedDate);
-
+            SetCurrentDate(selectedDate);
         }
 
-
-
+        private void SetCurrentDate(string selectedDate)
+        {
+            RequestIncomeList(selectedDate);
+            RequestExpenseList(selectedDate);
+        }
 
         private void InOutForm_Load(object sender, EventArgs e)
         {

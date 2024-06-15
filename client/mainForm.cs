@@ -26,12 +26,27 @@ namespace teamProject_00
         public int incomeCnt = 1;
         public int expenseCnt = 1;
 
+        public decimal budgetAmount = 0;
+        public decimal expenseAmount = 0;
+
         public mainForm(NetworkStream networkStream, TcpClient client, string userId)
         {
             InitializeComponent();
             this.m_networkStream = networkStream;
             this.m_client = client;
             this.userId = userId;
+
+            lvwExpense.View = View.Details;
+            lvwExpense.Columns.Add("카테고리");
+            lvwExpense.Columns.Add("가격");
+            lvwExpense.Columns.Add("설명");
+            lvwExpense.Columns.Add("날짜");
+
+            lvwIncome.View = View.Details;
+            lvwIncome.Columns.Add("카테고리");
+            lvwIncome.Columns.Add("가격");
+            lvwIncome.Columns.Add("설명");
+            lvwIncome.Columns.Add("날짜");
         }
 
 
@@ -96,6 +111,8 @@ namespace teamProject_00
                     {
                         label_name.Text = userName;
                         lblSetBudget.Text = amount;
+
+                        budgetAmount = decimal.Parse(lblSetBudget.Text);
                     }));
                 }
             }
@@ -192,6 +209,8 @@ namespace teamProject_00
                         string description = data[2];
                         string date = data[3];
 
+                        expenseAmount += decimal.Parse(amount);
+
                         ListViewItem lvwItem = new ListViewItem(categoryName);
                         lvwItem.SubItems.Add(amount);
                         lvwItem.SubItems.Add(description);
@@ -199,6 +218,7 @@ namespace teamProject_00
 
                         lvwExpense.Items.Add(lvwItem);
                     }
+                    lblRemainBudget.Text = (budgetAmount - expenseAmount).ToString();
                 }
             }
         }
