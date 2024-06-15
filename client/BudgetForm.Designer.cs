@@ -33,7 +33,7 @@
             this.label2 = new System.Windows.Forms.Label();
             this.BudgetSetting_btn = new System.Windows.Forms.Button();
             this.btn_exit = new System.Windows.Forms.Button();
-            this.lblRemainBudget = new System.Windows.Forms.Label();
+            this.lblSetBudget = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // monthCalendar1
@@ -50,9 +50,9 @@
             this.label1.Location = new System.Drawing.Point(145, 201);
             this.label1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(65, 12);
+            this.label1.Size = new System.Drawing.Size(77, 12);
             this.label1.TabIndex = 1;
-            this.label1.Text = "남은 예산: ";
+            this.label1.Text = "설정한 예산: ";
             // 
             // label2
             // 
@@ -86,21 +86,21 @@
             this.btn_exit.UseVisualStyleBackColor = true;
             this.btn_exit.Click += new System.EventHandler(this.btn_exit_Click);
             // 
-            // lblRemainBudget
+            // lblSetBudget
             // 
-            this.lblRemainBudget.AutoSize = true;
-            this.lblRemainBudget.Location = new System.Drawing.Point(215, 201);
-            this.lblRemainBudget.Name = "lblRemainBudget";
-            this.lblRemainBudget.Size = new System.Drawing.Size(11, 12);
-            this.lblRemainBudget.TabIndex = 5;
-            this.lblRemainBudget.Text = "0";
+            this.lblSetBudget.AutoSize = true;
+            this.lblSetBudget.Location = new System.Drawing.Point(219, 201);
+            this.lblSetBudget.Name = "lblSetBudget";
+            this.lblSetBudget.Size = new System.Drawing.Size(11, 12);
+            this.lblSetBudget.TabIndex = 5;
+            this.lblSetBudget.Text = "0";
             // 
             // BudgetForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(633, 443);
-            this.Controls.Add(this.lblRemainBudget);
+            this.Controls.Add(this.lblSetBudget);
             this.Controls.Add(this.btn_exit);
             this.Controls.Add(this.BudgetSetting_btn);
             this.Controls.Add(this.label2);
@@ -122,6 +122,6 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button BudgetSetting_btn;
         private System.Windows.Forms.Button btn_exit;
-        private System.Windows.Forms.Label lblRemainBudget;
+        private System.Windows.Forms.Label lblSetBudget;
     }
 }

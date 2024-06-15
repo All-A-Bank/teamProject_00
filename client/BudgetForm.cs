@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PacketClass;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -59,7 +60,37 @@ namespace teamProject_00
 
         private void BudgetForm_Load(object sender, EventArgs e)
         {
+            RequestBudget();
+        }
 
+        private void RequestBudget()
+        {
+            Packet requestPacket = new Packet();
+            requestPacket.type = (int)PacketType.유저이름과예산요청;
+            requestPacket.message.Add(this.userId);
+
+            byte[] serializedData = Packet.Serialize(requestPacket);
+            this.m_networkStream.Write(serializedData, 0, serializedData.Length);
+            this.m_networkStream.Flush();
+
+            Task.Run(() => ReceiveResponse());
+        }
+
+        private void ReceiveResponse()
+        {
+            int bytesRead = this.m_networkStream.Read(this.readBuffer, 0, this.readBuffer.Length);
+            if (bytesRead > 0)
+            {
+                Packet responsePacket = (Packet)Packet.Desserialize(this.readBuffer);
+                if ((PacketType)responsePacket.type == PacketType.유저이름과예산요청)
+                {
+                    string amount = responsePacket.message[1];
+                    this.Invoke(new MethodInvoker(delegate ()
+                    {
+                        lblSetBudget.Text = amount;
+                    }));
+                }
+            }
         }
     }
 }
