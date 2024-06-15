@@ -23,6 +23,9 @@ namespace teamProject_00
 
         private byte[] readBuffer = new byte[1024 * 4];
 
+        public decimal incomeAmount = 0;
+        public decimal expenseAmount = 0;
+
         public BudgetForm(NetworkStream networkStream, TcpClient client, string userId)
         {
             InitializeComponent();
@@ -61,6 +64,7 @@ namespace teamProject_00
         private void BudgetForm_Load(object sender, EventArgs e)
         {
             RequestBudget();
+            SetCurrentDate();
         }
 
         private void RequestBudget()
@@ -88,6 +92,91 @@ namespace teamProject_00
                     this.Invoke(new MethodInvoker(delegate ()
                     {
                         lblSetBudget.Text = amount;
+                    }));
+                }
+            }
+        }
+
+        private void SetCurrentDate()
+        {
+            string selectedDate = DateTime.Now.ToString("yyyy-MM-dd");
+            RequestIncomeList(selectedDate);
+            RequestExpenseList(selectedDate);
+        }
+
+        private void RequestIncomeList(string date)
+        {
+            Packet requestPacket = new Packet();
+            requestPacket.type = (int)PacketType.수입목록요청;
+            requestPacket.message.Add(this.userId + "," + date);
+
+            byte[] serializedData = Packet.Serialize(requestPacket);
+            this.m_networkStream.Write(serializedData, 0, serializedData.Length);
+            this.m_networkStream.Flush();
+
+            Task.Run(() => ReceiveIncomeListResponse());
+        }
+
+        private void RequestExpenseList(string date)
+        {
+            Packet requestPacket = new Packet();
+            requestPacket.type = (int)PacketType.지출목록요청;
+            requestPacket.message.Add(this.userId + "," + date);
+
+            byte[] serializedData = Packet.Serialize(requestPacket);
+            this.m_networkStream.Write(serializedData, 0, serializedData.Length);
+            this.m_networkStream.Flush();
+
+            Task.Run(() => ReceiveExpenseListResponse());
+        }
+
+        private void ReceiveIncomeListResponse()
+        {
+            int bytesRead = this.m_networkStream.Read(this.readBuffer, 0, this.readBuffer.Length);
+            if (bytesRead > 0)
+            {
+                Packet responsePacket = (Packet)Packet.Desserialize(this.readBuffer);
+
+                if ((PacketType)responsePacket.type == PacketType.수입목록요청)
+                {
+                    List<string> msgList = responsePacket.message;
+
+                    foreach (string msg in msgList)
+                    {
+                        string[] data = msg.Split(',');
+                        string amount = data[1];
+                        incomeAmount += decimal.Parse(amount);
+                    }
+
+                    this.Invoke(new MethodInvoker(delegate ()
+                    {
+                        lblIncomeAmount.Text = incomeAmount.ToString();
+                    }));
+                }
+            }
+        }
+
+        private void ReceiveExpenseListResponse()
+        {
+            int bytesRead = this.m_networkStream.Read(this.readBuffer, 0, this.readBuffer.Length);
+            if (bytesRead > 0)
+            {
+                Packet responsePacket = (Packet)Packet.Desserialize(this.readBuffer);
+
+                if ((PacketType)responsePacket.type == PacketType.지출목록요청)
+                {
+                    List<string> msgList = responsePacket.message;
+
+                    foreach (string msg in msgList)
+                    {
+                        string[] data = msg.Split(',');
+                        string amount = data[1];
+                        expenseAmount += decimal.Parse(amount);
+                    }
+
+                    this.Invoke(new MethodInvoker(delegate ()
+                    {
+                        lblExpenseAmount.Text = expenseAmount.ToString();
                     }));
                 }
             }

@@ -16,7 +16,8 @@ public enum PacketType
     수입추가,
     지출추가,
     예산추가,
-    수입지출목록요청,
+    수입목록요청,
+    지출목록요청
 }
 
 namespace PacketClass

@@ -116,7 +116,7 @@ namespace teamProject_00
         private void RequestIncomeList(string date)
         {
             Packet requestPacket = new Packet();
-            requestPacket.type = (int)PacketType.수입지출목록요청;
+            requestPacket.type = (int)PacketType.수입목록요청;
             requestPacket.message.Add(this.userId + "," + date);
 
             byte[] serializedData = Packet.Serialize(requestPacket);
@@ -129,7 +129,7 @@ namespace teamProject_00
         private void RequestExpenseList(string date)
         {
             Packet requestPacket = new Packet();
-            requestPacket.type = (int)PacketType.수입지출목록요청;
+            requestPacket.type = (int)PacketType.지출목록요청;
             requestPacket.message.Add(this.userId + "," + date);
 
             byte[] serializedData = Packet.Serialize(requestPacket);
@@ -146,7 +146,7 @@ namespace teamProject_00
             {
                 Packet responsePacket = (Packet)Packet.Desserialize(this.readBuffer);
 
-                if ((PacketType)responsePacket.type == PacketType.수입지출목록요청)
+                if ((PacketType)responsePacket.type == PacketType.수입목록요청)
                 {
                     List<string> msgList = responsePacket.message;
 
@@ -178,7 +178,7 @@ namespace teamProject_00
             {
                 Packet responsePacket = (Packet)Packet.Desserialize(this.readBuffer);
 
-                if ((PacketType)responsePacket.type == PacketType.수입지출목록요청)
+                if ((PacketType)responsePacket.type == PacketType.지출목록요청)
                 {
                     List<string> msgList = responsePacket.message;
 

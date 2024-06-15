@@ -225,7 +225,7 @@ namespace PacketServer
                             break;
                         }
 
-                    case (int)PacketType.수입지출목록요청:
+                    case (int)PacketType.수입목록요청:
                         {
                             // packet.message를 DateTime으로 변환
                             string[] msg = packet.message[0].Split(',');
@@ -235,6 +235,20 @@ namespace PacketServer
                             this.txt_server_state.AppendText("수입목록 Response 성공. " + userId + " " + date +  "\r\n");
 
                             SendIncomeResponse(userId, date);
+                            SendExpenseResponse(userId, date);
+
+                            break;
+                        }
+
+                    case (int)PacketType.지출목록요청:
+                        {
+                            // packet.message를 DateTime으로 변환
+                            string[] msg = packet.message[0].Split(',');
+                            string userId = msg[0];
+                            string date = msg[1];
+
+                            this.txt_server_state.AppendText("지출목록 Response 성공. " + userId + " " + date + "\r\n");
+
                             SendExpenseResponse(userId, date);
 
                             break;
@@ -296,7 +310,7 @@ namespace PacketServer
             DataTable incomeTable = dataSet.Tables["Income"];
             DataRow[] incomeList = incomeTable.Select($"userId = '{userId}' AND CONVERT(date, 'System.String') LIKE '{date}%'");
             Packet responsePacket = new Packet();
-            responsePacket.type = (int)PacketType.수입지출목록요청;
+            responsePacket.type = (int)PacketType.수입목록요청;
 
             foreach (DataRow income in incomeList)
             {
@@ -315,7 +329,7 @@ namespace PacketServer
             DataTable expensesTable = dataSet.Tables["Expense"];
             DataRow[] expenseList = expensesTable.Select($"userId = '{userId}' AND CONVERT(date, 'System.String') LIKE '{date}%'");
             Packet responsePacket = new Packet();
-            responsePacket.type = (int)PacketType.수입지출목록요청;
+            responsePacket.type = (int)PacketType.지출목록요청;
 
             foreach (DataRow expense in expenseList)
             {

@@ -34,6 +34,9 @@
             this.BudgetSetting_btn = new System.Windows.Forms.Button();
             this.btn_exit = new System.Windows.Forms.Button();
             this.lblSetBudget = new System.Windows.Forms.Label();
+            this.lblExpenseAmount = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.lblIncomeAmount = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // monthCalendar1
@@ -47,7 +50,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(145, 201);
+            this.label1.Location = new System.Drawing.Point(224, 201);
             this.label1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(77, 12);
@@ -57,16 +60,16 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(355, 201);
+            this.label2.Location = new System.Drawing.Point(224, 238);
             this.label2.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(100, 12);
+            this.label2.Size = new System.Drawing.Size(85, 12);
             this.label2.TabIndex = 2;
-            this.label2.Text = "오늘까지 지출: ₩";
+            this.label2.Text = "오늘까지 지출:";
             // 
             // BudgetSetting_btn
             // 
-            this.BudgetSetting_btn.Location = new System.Drawing.Point(235, 263);
+            this.BudgetSetting_btn.Location = new System.Drawing.Point(237, 342);
             this.BudgetSetting_btn.Margin = new System.Windows.Forms.Padding(2);
             this.BudgetSetting_btn.Name = "BudgetSetting_btn";
             this.BudgetSetting_btn.Size = new System.Drawing.Size(100, 34);
@@ -89,17 +92,48 @@
             // lblSetBudget
             // 
             this.lblSetBudget.AutoSize = true;
-            this.lblSetBudget.Location = new System.Drawing.Point(219, 201);
+            this.lblSetBudget.Location = new System.Drawing.Point(298, 201);
             this.lblSetBudget.Name = "lblSetBudget";
             this.lblSetBudget.Size = new System.Drawing.Size(11, 12);
             this.lblSetBudget.TabIndex = 5;
             this.lblSetBudget.Text = "0";
+            // 
+            // lblExpenseAmount
+            // 
+            this.lblExpenseAmount.AutoSize = true;
+            this.lblExpenseAmount.Location = new System.Drawing.Point(314, 238);
+            this.lblExpenseAmount.Name = "lblExpenseAmount";
+            this.lblExpenseAmount.Size = new System.Drawing.Size(11, 12);
+            this.lblExpenseAmount.TabIndex = 6;
+            this.lblExpenseAmount.Text = "0";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(224, 277);
+            this.label3.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(81, 12);
+            this.label3.TabIndex = 7;
+            this.label3.Text = "오늘까지 수입";
+            // 
+            // lblIncomeAmount
+            // 
+            this.lblIncomeAmount.AutoSize = true;
+            this.lblIncomeAmount.Location = new System.Drawing.Point(314, 277);
+            this.lblIncomeAmount.Name = "lblIncomeAmount";
+            this.lblIncomeAmount.Size = new System.Drawing.Size(11, 12);
+            this.lblIncomeAmount.TabIndex = 8;
+            this.lblIncomeAmount.Text = "0";
             // 
             // BudgetForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(633, 443);
+            this.Controls.Add(this.lblIncomeAmount);
+            this.Controls.Add(this.label3);
+            this.Controls.Add(this.lblExpenseAmount);
             this.Controls.Add(this.lblSetBudget);
             this.Controls.Add(this.btn_exit);
             this.Controls.Add(this.BudgetSetting_btn);
@@ -123,5 +157,8 @@
         private System.Windows.Forms.Button BudgetSetting_btn;
         private System.Windows.Forms.Button btn_exit;
         private System.Windows.Forms.Label lblSetBudget;
+        private System.Windows.Forms.Label lblExpenseAmount;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label lblIncomeAmount;
     }
 }
