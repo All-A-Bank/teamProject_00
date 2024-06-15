@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml.Linq;
 using PacketClass;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
 
 namespace teamProject_00
 {
@@ -64,14 +65,14 @@ namespace teamProject_00
 
         private void mainForm_Load(object sender, EventArgs e)
         {
-            RequestUserName();
+            RequestUserNameAndBudget();
             SetCurrentDate();
         }
 
-        private void RequestUserName()
+        private void RequestUserNameAndBudget()
         {
             Packet requestPacket = new Packet();
-            requestPacket.type = (int)PacketType.유저이름요청;
+            requestPacket.type = (int)PacketType.유저이름과예산요청;
             requestPacket.message.Add(this.userId);
 
             byte[] serializedData = Packet.Serialize(requestPacket);
@@ -87,13 +88,14 @@ namespace teamProject_00
             if (bytesRead > 0)
             {
                 Packet responsePacket = (Packet)Packet.Desserialize(this.readBuffer);
-
-                if ((PacketType)responsePacket.type == PacketType.유저이름요청)
+                if ((PacketType)responsePacket.type == PacketType.유저이름과예산요청)
                 {
                     string userName = responsePacket.message[0];
+                    string amount = responsePacket.message[1];
                     this.Invoke(new MethodInvoker(delegate ()
                     {
                         label_name.Text = userName;
+                        lblSetBudget.Text = amount;
                     }));
                 }
             }

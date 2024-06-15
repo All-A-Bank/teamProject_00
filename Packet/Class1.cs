@@ -12,11 +12,11 @@ public enum PacketType
     에러 = 0,
     회원가입,
     로그인,
-    유저이름요청,
+    유저이름과예산요청,
     수입추가,
     지출추가,
+    예산추가,
     수입지출목록요청,
-    
 }
 
 namespace PacketClass
@@ -124,6 +124,19 @@ namespace PacketClass
             this.amount = 0;
             this.description = null;
             this.date = DateTime.MinValue;
+        }
+    }
+
+    [Serializable]
+    public class Budget : Packet
+    {
+        public decimal amount;
+        public string userId;
+
+        public Budget()
+        {
+            this.amount = 0;
+            userId = null;
         }
     }
 }

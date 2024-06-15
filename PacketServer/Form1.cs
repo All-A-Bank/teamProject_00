@@ -32,6 +32,7 @@ namespace PacketServer
         public SignUp m_signUpClass;
         public IncomeAdd m_incomeAdd;
         public ExpenseAdd m_expenseAdd;
+        public Budget m_budgetClass;
 
         DataSet dataSet;
 
@@ -58,10 +59,8 @@ namespace PacketServer
             // 예산
             DataTable budgetsTable = new DataTable("Budgets");
             budgetsTable.Columns.Add("budget_id", typeof(int)).AutoIncrement = true;
-            budgetsTable.Columns.Add("category_id", typeof(int));
             budgetsTable.Columns.Add("amount", typeof(decimal));
-            budgetsTable.Columns.Add("description", typeof(string));
-            budgetsTable.Columns.Add("date", typeof(DateTime));
+            budgetsTable.Columns.Add("userId", typeof(string));
             budgetsTable.PrimaryKey = new DataColumn[] { budgetsTable.Columns["budget_id"] };
 
             // 지출
@@ -91,17 +90,17 @@ namespace PacketServer
             dataSet.Tables.Add(incomeTable);
 
             // 외래 키 설정
-            DataRelation categoryBudgetRelation = new DataRelation("CategoryBudget", categoriesTable.Columns["category_id"], budgetsTable.Columns["category_id"]);
             DataRelation categoryExpenseRelation = new DataRelation("CategoryExpense", categoriesTable.Columns["category_id"], expensesTable.Columns["category_id"]);
             DataRelation categoryIncomeRelation = new DataRelation("CategoryIncome", categoriesTable.Columns["category_id"], incomeTable.Columns["category_id"]);
             DataRelation personIncomeRelation = new DataRelation("PersonIncome", personTable.Columns["userId"], incomeTable.Columns["userId"]);
             DataRelation personExpenseRelation = new DataRelation("PersonExpense", personTable.Columns["userId"], expensesTable.Columns["userId"]);
+            DataRelation personBudgetRelation = new DataRelation("PersonBudget", personTable.Columns["userId"], budgetsTable.Columns["userId"]);
 
-            dataSet.Relations.Add(categoryBudgetRelation);
             dataSet.Relations.Add(categoryExpenseRelation);
             dataSet.Relations.Add(categoryIncomeRelation);
             dataSet.Relations.Add(personIncomeRelation);
             dataSet.Relations.Add(personExpenseRelation);
+            dataSet.Relations.Add(personBudgetRelation);
 
             dataSet.Tables["Categories"].Rows.Add(null, "식비");
             dataSet.Tables["Categories"].Rows.Add(null, "교통비");
@@ -111,7 +110,7 @@ namespace PacketServer
 
 
 
-            dataGridView1.DataSource = dataSet.Tables["Person"];
+            dataGridView1.DataSource = dataSet.Tables["Budgets"];
             dataGridView2.DataSource = dataSet.Tables["Income"];
             dataGridView3.DataSource = dataSet.Tables["Expense"];
         }
@@ -194,11 +193,11 @@ namespace PacketServer
                             break;
                         }
 
-                    case (int)PacketType.유저이름요청:
+                    case (int)PacketType.유저이름과예산요청:
                         {
-                            // 사용자 ID를 기반으로 이름을 조회합니다.
+                            this.txt_server_state.AppendText("유저 이름과 예산 요청 \r\n");
                             string userId = packet.message[0];
-                            SendUserNameResponse(userId);
+                            SendUserNameAndBudgetResponse(userId);
                             break;
                         }
 
@@ -241,24 +240,55 @@ namespace PacketServer
                             break;
                         }
 
+                    case (int)PacketType.예산추가:
+                        {
+                            this.m_budgetClass = (Budget)Packet.Desserialize(this.readBuffer);
+
+                            this.Invoke(new MethodInvoker(delegate ()
+                            {
+                                this.txt_server_state.AppendText("예산추가 Request 성공. " + "Budget Class Data is " + this.m_budgetClass.amount + " / " + this.m_budgetClass.userId + "\r\n");
+                                dataSet.Tables["Budgets"].Rows.Add(null, this.m_budgetClass.amount, this.m_budgetClass.userId);
+                            }));
+                            break;
+                        }
 
                 }
             }
         }
 
-        private void SendUserNameResponse(string userId)
+        private void SendUserNameAndBudgetResponse(string userId)
         {
-            DataTable personTable = dataSet.Tables["Person"];
-            DataRow[] person = personTable.Select($"userId = '{userId}'");
+            try
+            {
+                DataTable personTable = dataSet.Tables["Person"];
+                DataRow[] person = personTable.Select($"userId = '{userId}'");
 
-            Packet responsePacket = new Packet();
-            responsePacket.type = (int)PacketType.유저이름요청;
+                DataTable budgetTable = dataSet.Tables["Budgets"];
+                DataRow[] budget = budgetTable.Select($"userId = '{userId}'", "budget_id DESC");
 
-            responsePacket.message.Add(person[0]["name"].ToString());
+                Packet responsePacket = new Packet();
+                responsePacket.type = (int)PacketType.유저이름과예산요청;
 
-            byte[] serializedData = Packet.Serialize(responsePacket);
-            this.m_networkstream.Write(serializedData, 0, serializedData.Length);
-            this.m_networkstream.Flush();
+                responsePacket.message.Add(person[0]["name"].ToString());
+
+                if (budget.Length > 0)
+                {
+                    responsePacket.message.Add(budget[0]["amount"].ToString());
+
+                }
+                else
+                {
+                    responsePacket.message.Add("0");
+                }
+
+
+                byte[] serializedData = Packet.Serialize(responsePacket);
+                this.m_networkstream.Write(serializedData, 0, serializedData.Length);
+                this.m_networkstream.Flush();
+            } catch (Exception e)
+            {
+                MessageBox.Show(e.Message);
+            }
         }
 
         private void SendIncomeResponse(string userId, string date)

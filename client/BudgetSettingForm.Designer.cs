@@ -28,51 +28,36 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.textBox2 = new System.Windows.Forms.TextBox();
-            this.label1 = new System.Windows.Forms.Label();
+            this.txtBudget = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.btn_Cancel = new System.Windows.Forms.Button();
             this.btn_OK = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
-            // textBox1
+            // txtBudget
             // 
-            this.textBox1.Location = new System.Drawing.Point(246, 161);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(295, 35);
-            this.textBox1.TabIndex = 0;
-            // 
-            // textBox2
-            // 
-            this.textBox2.Location = new System.Drawing.Point(246, 297);
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(295, 35);
-            this.textBox2.TabIndex = 1;
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(333, 101);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(114, 24);
-            this.label1.TabIndex = 2;
-            this.label1.Text = "예산 이름";
+            this.txtBudget.Location = new System.Drawing.Point(130, 67);
+            this.txtBudget.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.txtBudget.Name = "txtBudget";
+            this.txtBudget.Size = new System.Drawing.Size(161, 21);
+            this.txtBudget.TabIndex = 1;
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(333, 252);
+            this.label2.Location = new System.Drawing.Point(177, 45);
+            this.label2.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(114, 24);
+            this.label2.Size = new System.Drawing.Size(57, 12);
             this.label2.TabIndex = 3;
             this.label2.Text = "예산 금액";
             // 
             // btn_Cancel
             // 
-            this.btn_Cancel.Location = new System.Drawing.Point(210, 395);
+            this.btn_Cancel.Location = new System.Drawing.Point(111, 117);
+            this.btn_Cancel.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.btn_Cancel.Name = "btn_Cancel";
-            this.btn_Cancel.Size = new System.Drawing.Size(85, 42);
+            this.btn_Cancel.Size = new System.Drawing.Size(66, 45);
             this.btn_Cancel.TabIndex = 4;
             this.btn_Cancel.Text = "취소";
             this.btn_Cancel.UseVisualStyleBackColor = true;
@@ -80,9 +65,10 @@
             // 
             // btn_OK
             // 
-            this.btn_OK.Location = new System.Drawing.Point(466, 395);
+            this.btn_OK.Location = new System.Drawing.Point(249, 117);
+            this.btn_OK.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.btn_OK.Name = "btn_OK";
-            this.btn_OK.Size = new System.Drawing.Size(75, 42);
+            this.btn_OK.Size = new System.Drawing.Size(68, 45);
             this.btn_OK.TabIndex = 5;
             this.btn_OK.Text = "확인";
             this.btn_OK.UseVisualStyleBackColor = true;
@@ -90,15 +76,14 @@
             // 
             // BudgetSettingForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(13F, 24F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(832, 538);
+            this.ClientSize = new System.Drawing.Size(448, 269);
             this.Controls.Add(this.btn_OK);
             this.Controls.Add(this.btn_Cancel);
             this.Controls.Add(this.label2);
-            this.Controls.Add(this.label1);
-            this.Controls.Add(this.textBox2);
-            this.Controls.Add(this.textBox1);
+            this.Controls.Add(this.txtBudget);
+            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.Name = "BudgetSettingForm";
             this.Text = "BudgetSettingForm";
             this.Load += new System.EventHandler(this.BudgetSettingForm_Load);
@@ -108,10 +93,7 @@
         }
 
         #endregion
-
-        private System.Windows.Forms.TextBox textBox1;
-        private System.Windows.Forms.TextBox textBox2;
-        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.TextBox txtBudget;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button btn_Cancel;
         private System.Windows.Forms.Button btn_OK;

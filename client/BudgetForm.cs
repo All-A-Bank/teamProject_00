@@ -18,6 +18,8 @@ namespace teamProject_00
         private TcpClient m_client;
         private string userId;
 
+        private bool m_bConnect = false;
+
         private byte[] readBuffer = new byte[1024 * 4];
 
         public BudgetForm(NetworkStream networkStream, TcpClient client, string userId)
@@ -26,6 +28,7 @@ namespace teamProject_00
             this.m_networkStream = networkStream;
             this.m_client = client;
             this.userId = userId;
+            this.m_bConnect = client.Connected;
         }
 
         private void monthCalendar1_DateSelected(object sender, DateRangeEventArgs e)
@@ -49,9 +52,9 @@ namespace teamProject_00
 
         private void BudgetSetting_btn_Click(object sender, EventArgs e)
         {
-            BudgetSettingForm budgetSettingForm = new BudgetSettingForm();
-            budgetSettingForm.ShowDialog();
-
+            BudgetSettingForm budgetSettingForm = new BudgetSettingForm(this.m_networkStream, this.m_client, userId);
+            budgetSettingForm.Show();
+            this.Hide();
         }
 
         private void BudgetForm_Load(object sender, EventArgs e)
