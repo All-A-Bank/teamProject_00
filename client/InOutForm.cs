@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml.Linq;
 using PacketClass;
+using static teamProject_00.chart_Form;
 
 namespace teamProject_00
 {
@@ -21,7 +22,7 @@ namespace teamProject_00
         private string userId;
 
         private byte[] readBuffer = new byte[1024 * 4];
-
+        private List<FinancialData> financialDataList;
         public int incomeCnt = 1;
         public int expenseCnt = 1;
 
@@ -31,6 +32,8 @@ namespace teamProject_00
             this.m_networkStream = networkStream;
             this.m_client = client;
             this.userId = userId;
+            this.financialDataList = new List<FinancialData>();
+            RequestFinancialData();
 
             lvwExpense.View = View.Details;
             lvwExpense.Columns.Add("카테고리");
@@ -253,7 +256,104 @@ namespace teamProject_00
                 }
             }
         }
+        public class FinancialData
+        {
+            public string Type { get; set; }
+            public string CategoryName { get; set; }
+            public decimal Amount { get; set; }
+        }
 
+        private void RequestFinancialData()
+        {
+            Packet requestPacket = new Packet();
+            requestPacket.type = (int)PacketType.재정데이터요청;
+            requestPacket.message.Add(this.userId);
+
+            byte[] serializedData = Packet.Serialize(requestPacket);
+            this.m_networkStream.Write(serializedData, 0, serializedData.Length);
+            this.m_networkStream.Flush();
+
+            Task.Run(() => ReceiveFinancialDataResponse());
+        }
+        private void ReceiveFinancialDataResponse()
+        {
+            int bytesRead = this.m_networkStream.Read(this.readBuffer, 0, this.readBuffer.Length);
+            if (bytesRead > 0)
+            {
+                Packet responsePacket = (Packet)Packet.Desserialize(this.readBuffer);
+                if ((PacketType)responsePacket.type == PacketType.재정데이터요청)
+                {
+                    string financialDataMessage = string.Join(",", responsePacket.message);
+                    ParseFinancialData(financialDataMessage);
+                    DisplayPieChart("all");
+                }
+            }
+        }
+        private void DisplayPieChart(string filter)
+        {
+            var chartData = new Dictionary<string, decimal>();
+            foreach (var data in financialDataList)
+            {
+                if (filter == "all" )
+                {
+                    string categoryName = data.CategoryName;
+                    if (!chartData.ContainsKey(categoryName))
+                    {
+                        chartData[categoryName] = 0;
+                    }
+                    chartData[categoryName] += data.Amount;
+                }
+            }
+            this.Invoke(new MethodInvoker(delegate ()
+            {
+                this.chart1.Series.Clear();
+            }));
+
+            var series = new System.Windows.Forms.DataVisualization.Charting.Series
+            {
+                Name = "FinancialData",
+                IsVisibleInLegend = true,
+                ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Pie
+            };
+
+            this.Invoke(new MethodInvoker(delegate ()
+            {
+                this.chart1.Series.Add(series);
+            }));
+
+            foreach (var entry in chartData)
+            {
+                this.Invoke(new MethodInvoker(delegate ()
+                {
+                    series.Points.AddXY(entry.Key, entry.Value);
+                }));
+
+            }
+            this.Invoke(new MethodInvoker(delegate ()
+            {
+                this.chart1.Invalidate();
+            }));
+
+        }
+
+        private void ParseFinancialData(string financialDataMessage)
+        {
+            financialDataList.Clear();
+            string[] dataEntries = financialDataMessage.Split(new[] { ',' });
+
+            foreach (string entry in dataEntries)
+            {
+                string[] parts = entry.Split(':');
+                if (parts.Length == 3)
+                {
+                    string type = parts[0];
+                    string categoryName = parts[1];
+                    decimal amount;
+                    if (decimal.TryParse(parts[2], out amount))
+                        financialDataList.Add(new FinancialData { Type = type, CategoryName = categoryName, Amount = amount });
+                }
+            }
+        }
         private void addbutton_Click(object sender, EventArgs e)
         {
             //MessageBox.Show(userId);

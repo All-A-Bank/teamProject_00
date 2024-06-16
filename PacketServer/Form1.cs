@@ -108,11 +108,35 @@ namespace PacketServer
             dataSet.Tables["Categories"].Rows.Add(null, "급여");
             dataSet.Tables["Categories"].Rows.Add(null, "연금");
 
+            // 사용자
+            dataSet.Tables["Person"].Rows.Add(null, "user1", "p", "홍길동");
+            dataSet.Tables["Person"].Rows.Add(null, "user2", "password2", "김철수");
 
+            // 지출 예시 데이터
+            dataSet.Tables["Expense"].Rows.Add(null, 0, "user1", 100, "식사", DateTime.Now);
+            dataSet.Tables["Expense"].Rows.Add(null, 2, "user1", 200, "쇼핑", DateTime.Now);
+            dataSet.Tables["Expense"].Rows.Add(null, 1, "user1", 300, "기타", DateTime.Now);
+
+            // 수입 예시 데이터
+            dataSet.Tables["Income"].Rows.Add(null, 4, "user1", 200, "월급", DateTime.Now);
+            dataSet.Tables["Income"].Rows.Add(null, 3, "user1", 500, "연금", DateTime.Now);
 
             dataGridView1.DataSource = dataSet.Tables["Budgets"];
             dataGridView2.DataSource = dataSet.Tables["Income"];
             dataGridView3.DataSource = dataSet.Tables["Expense"];
+        }
+
+        private void LogMessage(string message)
+        {
+            if (txt_server_state.InvokeRequired)
+            {
+                txt_server_state.Invoke(new MethodInvoker(delegate
+                {
+                    txt_server_state.AppendText(message + "\r\n");
+                }));
+            }
+            else
+                txt_server_state.AppendText(message + "\r\n");
         }
 
         public void ServerStart()
@@ -195,7 +219,7 @@ namespace PacketServer
 
                     case (int)PacketType.유저이름과예산요청:
                         {
-                            this.txt_server_state.AppendText("유저 이름과 예산 요청 \r\n");
+                            LogMessage("유저 이름과 예산 요청");
                             string userId = packet.message[0];
                             SendUserNameAndBudgetResponse(userId);
                             break;
@@ -232,10 +256,10 @@ namespace PacketServer
                             string userId = msg[0];
                             string date = msg[1];
                             
-                            this.txt_server_state.AppendText("수입목록 Response 성공. " + userId + " " + date +  "\r\n");
+                            LogMessage($"수입목록 Response 성공. {userId} {date}");
 
                             SendIncomeResponse(userId, date);
-                            SendExpenseResponse(userId, date);
+                            //SendExpenseResponse(userId, date);
 
                             break;
                         }
@@ -247,7 +271,7 @@ namespace PacketServer
                             string userId = msg[0];
                             string date = msg[1];
 
-                            this.txt_server_state.AppendText("지출목록 Response 성공. " + userId + " " + date + "\r\n");
+                            LogMessage($"지출목록 Response 성공. {userId} {date}");
 
                             SendExpenseResponse(userId, date);
 
@@ -263,6 +287,18 @@ namespace PacketServer
                                 this.txt_server_state.AppendText("예산추가 Request 성공. " + "Budget Class Data is " + this.m_budgetClass.amount + " / " + this.m_budgetClass.userId + "\r\n");
                                 dataSet.Tables["Budgets"].Rows.Add(null, this.m_budgetClass.amount, this.m_budgetClass.userId);
                             }));
+                            break;
+                        }
+                    case (int)PacketType.재정데이터요청:
+                        {
+                            string userId = packet.message[0];
+                            SendFinancialDataPacket(userId);
+                            break;
+                        }
+                    case (int)PacketType.카테고리이름요청:
+                        {
+                            string categoryId = packet.message[0];
+                            SendCategoryName(categoryId);
                             break;
                         }
 
@@ -374,6 +410,99 @@ namespace PacketServer
             this.m_networkstream.Write(serializedData, 0, serializedData.Length);
             this.m_networkstream.Flush();
         }
+        private void SendCategoryName(string categoryId)
+        {
+            DataTable categoryTable = dataSet.Tables["Categories"];
+            DataRow[] category = categoryTable.Select($"category_id = {categoryId}");
+
+            if (category.Length > 0)
+            {
+                Packet categoryNamePacket = new Packet();
+                categoryNamePacket.type = (int)PacketType.카테고리이름요청;
+                categoryNamePacket.message.Add(category[0]["name"].ToString());
+
+                byte[] serializedData = Packet.Serialize(categoryNamePacket);
+                this.m_networkstream.Write(serializedData, 0, serializedData.Length);
+                this.m_networkstream.Flush();
+            }
+            else
+            {
+                // Handle case where the category is not found
+                Packet errorPacket = new Packet
+                {
+                    type = (int)PacketType.에러,
+                    errorMessage = "Category not found."
+                };
+
+                byte[] serializedData = Packet.Serialize(errorPacket);
+                this.m_networkstream.Write(serializedData, 0, serializedData.Length);
+                this.m_networkstream.Flush();
+            }
+        }
+
+
+        private void SendFinancialDataPacket(string userId)
+        {
+            DataTable personTable = dataSet.Tables["Person"];
+            DataTable incomeTable = dataSet.Tables["Income"];
+            DataTable expenseTable = dataSet.Tables["Expense"];
+            DataTable categoriesTable = dataSet.Tables["Categories"];
+
+            DataRow[] person = personTable.Select($"userID = '{userId}'");
+            if (person.Length == 0)
+            {
+                SendErrorPacket("사용자 정보를 찾을 수 없습니다.");
+                return;
+            }
+
+            int personId = (int)person[0]["person_id"];
+            DataRow[] expenses = expenseTable.Select($"userId = '{userId}'");
+            DataRow[] incomes = incomeTable.Select($"userId = '{userId}'");
+
+            List<string> financialDataList = new List<string>();
+
+            foreach (DataRow row in expenses)
+            {
+                int categoryId = (int)row["category_id"];
+                string categoryName = GetCategoryName(categoryId);
+
+                string expenseData = $"expense:{categoryName}:{row["amount"]}";
+                financialDataList.Add(expenseData);
+            }
+
+            foreach (DataRow row in incomes)
+            {
+                int categoryId = (int)row["category_id"];
+                string categoryName = GetCategoryName(categoryId);
+
+                string incomeData = $"income:{categoryName}:{row["amount"]}";
+                financialDataList.Add(incomeData);
+            }
+
+            Packet financialDataPacket = new Packet();
+            financialDataPacket.type = (int)PacketType.재정데이터요청;
+            financialDataPacket.message.AddRange(financialDataList); // Add all elements of financialDataList to message
+
+            byte[] serializedData = Packet.Serialize(financialDataPacket);
+            this.m_networkstream.Write(serializedData, 0, serializedData.Length);
+            this.m_networkstream.Flush();
+        }
+
+        private string GetCategoryName(int categoryId)
+        {
+            DataTable categoriesTable = dataSet.Tables["Categories"];
+            DataRow[] category = categoriesTable.Select($"category_id = {categoryId}");
+
+            if (category.Length > 0)
+            {
+                return category[0]["name"].ToString();
+            }
+            else
+            {
+                return "Unknown";
+            }
+        }
+
 
         private void Form1_Load(object sender, EventArgs e)
         {

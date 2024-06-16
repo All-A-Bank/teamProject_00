@@ -182,7 +182,10 @@ namespace teamProject_00
                         lvwItem.SubItems.Add(description);
                         lvwItem.SubItems.Add(date);
 
-                        lvwIncome.Items.Add(lvwItem);
+                        lvwIncome.Invoke(new MethodInvoker(delegate
+                        {
+                            lvwIncome.Items.Add(lvwItem);
+                        }));
                     }
                 }
             }
@@ -216,9 +219,15 @@ namespace teamProject_00
                         lvwItem.SubItems.Add(description);
                         lvwItem.SubItems.Add(date);
 
-                        lvwExpense.Items.Add(lvwItem);
+                        lvwExpense.Invoke(new MethodInvoker(delegate
+                        {
+                            lvwExpense.Items.Add(lvwItem);
+                        }));
                     }
-                    lblRemainBudget.Text = (budgetAmount - expenseAmount).ToString();
+                    lblRemainBudget.Invoke(new MethodInvoker(delegate
+                    {
+                        lblRemainBudget.Text = (budgetAmount - expenseAmount).ToString();
+                    }));
                 }
             }
         }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PacketClass;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -15,13 +16,22 @@ namespace teamProject_00
 {
     public partial class chart_Form : Form
     {
-
         private NetworkStream m_networkStream;
         private TcpClient m_client;
         private string userId;
-
         private byte[] readBuffer = new byte[1024 * 4];
+        private List<FinancialData> financialDataList;
 
+        public chart_Form(NetworkStream networkStream, TcpClient client, string userId)
+        {
+            InitializeComponent();
+            this.m_networkStream = networkStream;
+            this.m_client = client;
+            this.userId = userId;
+            this.financialDataList = new List<FinancialData>();
+            RequestFinancialData();
+            //this.Paint += new System.Windows.Forms.PaintEventHandler(this.chart_Form_Paint);
+        }
         Dictionary<string, float> expense = new Dictionary<string, float>
         {
             {"식비",300.0f },
@@ -29,12 +39,118 @@ namespace teamProject_00
             {"주거비",500.0f },
             {"여가비",100.0f }
         };
-        public chart_Form(NetworkStream networkStream, TcpClient client, string userId)
+
+        public class FinancialData
         {
-            InitializeComponent();
-            this.Paint += new System.Windows.Forms.PaintEventHandler(this.chart_Form_Paint);
+            public string Type { get; set; }
+            public string CategoryName { get; set; }
+            public decimal Amount { get; set; }
         }
 
+        private void RequestFinancialData()
+        {
+            Packet requestPacket = new Packet();
+            requestPacket.type = (int)PacketType.재정데이터요청;
+            requestPacket.message.Add(this.userId);
+
+            byte[] serializedData = Packet.Serialize(requestPacket);
+            this.m_networkStream.Write(serializedData, 0, serializedData.Length);
+            this.m_networkStream.Flush();
+
+            Task.Run(() => ReceiveFinancialDataResponse());
+        }
+        private void ReceiveFinancialDataResponse()
+        {
+            int bytesRead = this.m_networkStream.Read(this.readBuffer, 0, this.readBuffer.Length);
+            if (bytesRead > 0)
+            {
+                Packet responsePacket = (Packet)Packet.Desserialize(this.readBuffer);
+                if ((PacketType)responsePacket.type == PacketType.재정데이터요청)
+                {
+                    string financialDataMessage = string.Join(",", responsePacket.message);
+                    ParseFinancialData(financialDataMessage);
+                    UpdateChart();
+                }
+            }
+        }
+
+        private void ParseFinancialData(string financialDataMessage)
+        {
+            financialDataList.Clear();
+            string[] dataEntries = financialDataMessage.Split(new[] { ',' });
+
+            foreach (string entry in dataEntries)
+            {
+                string[] parts = entry.Split(':');
+                if (parts.Length == 3)
+                {
+                    string type = parts[0];
+                    string categoryName = parts[1];
+                    decimal amount;
+                    if (decimal.TryParse(parts[2], out amount))
+                        financialDataList.Add(new FinancialData { Type = type, CategoryName = categoryName, Amount = amount });
+                }
+            }
+        }
+
+        private void UpdateChart()
+        {
+            if (rdo_in.Checked)
+                DisplayPieChart("income");
+            else if (rdo_out.Checked)
+                DisplayPieChart("expense");
+            else if (rdo_all.Checked)
+                DisplayPieChart("all");
+
+        }
+
+        private void DisplayPieChart(string filter)
+        {
+            var chartData = new Dictionary<string, decimal>();
+            foreach (var data in financialDataList)
+            {
+                if (filter == "all" || data.Type == filter)
+                {
+                    string categoryName = data.CategoryName;
+                    if (!chartData.ContainsKey(categoryName))
+                    {
+                        chartData[categoryName] = 0;
+                    }
+                    chartData[categoryName] += data.Amount;
+                }
+            }
+            this.Invoke(new MethodInvoker(delegate ()
+            {
+                this.chart1.Series.Clear();
+            }));
+           
+            var series = new System.Windows.Forms.DataVisualization.Charting.Series
+            {
+                Name = "FinancialData",
+                IsVisibleInLegend = true,
+                ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Pie
+            };
+
+            this.Invoke(new MethodInvoker(delegate ()
+            {
+                this.chart1.Series.Add(series);
+            }));
+            
+
+            foreach (var entry in chartData)
+            {
+                this.Invoke(new MethodInvoker(delegate ()
+                {
+                    series.Points.AddXY(entry.Key, entry.Value);
+                }));
+                
+            }
+            this.Invoke(new MethodInvoker(delegate ()
+            {
+                this.chart1.Invalidate();
+            }));
+            
+        }
         private void btn_exit_Click(object sender, EventArgs e)
         {
             InOutForm inOutForm = new InOutForm(this.m_networkStream, this.m_client, userId);
@@ -44,44 +160,7 @@ namespace teamProject_00
 
         private void chart_Form_Paint(object sender, PaintEventArgs e)
         {
-            Graphics g = e.Graphics;
-            g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;//그림 가장자리의 부드러움
-            g.Clear(this.BackColor);
 
-            float startAngle = 0f;//파이차트 시작 각도
-
-            float totalExpense = 0f;//총 지출 계산
-            foreach (KeyValuePair<string, float> kvp in expense)
-            {
-                totalExpense += kvp.Value;
-            }
-
-            Rectangle pieRectangle = new Rectangle(10,10,200,200);//파이 차트 영역
-
-
-            foreach (KeyValuePair<string,float> kvp in expense)
-            {
-
-                float sweepAngle = (kvp.Value / totalExpense) * 360;//현재 카테고리의 비율
-                g.FillPie(new SolidBrush(GetColorForCategory(kvp.Key)), pieRectangle, startAngle, sweepAngle);
-                
-                //카테고리 이름 표시
-                double midAngle = (Math.PI/180.0) * (startAngle + sweepAngle / 2);//파이 조각의 중간 각도
-                //카테고리 이름을 그릴 위치
-                PointF labelPoint = new PointF(
-                    pieRectangle.X + (pieRectangle.Width/2)+(float)(Math.Cos(midAngle)*(pieRectangle.Width/4)),
-                    pieRectangle.Y + (pieRectangle.Height / 2) + (float)(Math.Sin(midAngle) * (pieRectangle.Height/4))
-                    );//중간점 좌표 계산
-
-               StringFormat format = new StringFormat();
-                format.Alignment = StringAlignment.Center;
-                format.LineAlignment = StringAlignment.Center;
-                g.DrawString(kvp.Key,this.Font, Brushes.Black,labelPoint,format);
-                //g.DrawString(kvp.Key, this.Font, new SolidBrush(Color.Black),labelPoint );
-
-                startAngle += sweepAngle;//다음 파이값의 시작 각도 업데이트
-            }
-   
         }
         private Dictionary<string, Color> categoryColors = new Dictionary<string, Color>();
         private Random rnd = new Random();
@@ -144,6 +223,21 @@ namespace teamProject_00
         private void chart_Form_Load(object sender, EventArgs e)
         {
 
+        }
+     
+        private void rdo_in_CheckedChanged_1(object sender, EventArgs e)
+        {
+            UpdateChart();
+        }
+
+        private void rdo_out_CheckedChanged_1(object sender, EventArgs e)
+        {
+            UpdateChart();
+        }
+
+        private void rdo_all_CheckedChanged_1(object sender, EventArgs e)
+        {
+            UpdateChart();
         }
     }
 }
