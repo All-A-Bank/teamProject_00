@@ -192,7 +192,6 @@ namespace teamProject_00
 
                             lvwIncome.Items.Add(lvwItem);
 
-                            MessageBox.Show("lvwIncome");
                         }
                     }));
                     

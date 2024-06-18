@@ -76,9 +76,34 @@ namespace teamProject_00
             Packet.Serialize(signUp).CopyTo(this.sendBuffer, 0);
             this.Send();
 
-            loginForm login = new loginForm(this.m_client, this.m_networkStream);
-            login.Show();
-            this.Hide();
+            Task.Run(() => ReceiveResponse());
+        }
+
+        private void ReceiveResponse()
+        {
+            int bytesRead = this.m_networkStream.Read(this.readBuffer, 0, this.readBuffer.Length);
+            if (bytesRead > 0)
+            {
+                Packet responsePacket = (Packet)Packet.Desserialize(this.readBuffer);
+
+                if ((PacketType)responsePacket.type == PacketType.에러)
+                {
+                    this.Invoke(new MethodInvoker(delegate ()
+                    {
+                        MessageBox.Show(responsePacket.errorMessage);
+                    }));
+                }
+                else if ((PacketType)responsePacket.type == PacketType.회원가입)
+                {
+                    this.Invoke(new MethodInvoker(delegate ()
+                    {
+                        MessageBox.Show("회원가입에 성공하셨습니다!");
+                        loginForm login = new loginForm(this.m_client, this.m_networkStream);
+                        login.Show();
+                        this.Hide();
+                    }));
+                }
+            }
         }
 
 

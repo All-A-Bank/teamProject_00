@@ -121,7 +121,7 @@ namespace PacketServer
             dataSet.Tables["Income"].Rows.Add(null, 4, "user1", 200, "월급", DateTime.Now);
             dataSet.Tables["Income"].Rows.Add(null, 3, "user1", 500, "연금", DateTime.Now);
 
-            dataGridView1.DataSource = dataSet.Tables["Budgets"];
+            dataGridView1.DataSource = dataSet.Tables["Person"];
             dataGridView2.DataSource = dataSet.Tables["Income"];
             dataGridView3.DataSource = dataSet.Tables["Expense"];
         }
@@ -187,11 +187,9 @@ namespace PacketServer
                     case (int)PacketType.회원가입:
                         {
                             this.m_signUpClass = (SignUp)Packet.Desserialize(this.readBuffer);
-
                             this.Invoke(new MethodInvoker(delegate ()
                             {
-                                this.txt_server_state.AppendText("회원가입 Request 성공. " + "SignUp Class Data is " + this.m_signUpClass.userId + " / " + this.m_signUpClass.password + " / " + this.m_signUpClass.name + "\r\n");
-                                dataSet.Tables["Person"].Rows.Add(null, this.m_signUpClass.userId, this.m_signUpClass.password, this.m_signUpClass.name);
+                                SendSignUpResponse(this.m_signUpClass);
                             }));
                             break;
                         }
@@ -340,6 +338,35 @@ namespace PacketServer
 
 
                 }
+            }
+        }
+
+        private void SendSignUpResponse(SignUp signUp)
+        {
+            try
+            {
+                DataTable personTable = dataSet.Tables["Person"];
+                DataRow[] existingUsers = personTable.Select($"userId = '{signUp.userId}'");
+
+                Packet responsePacket = new Packet();
+                if (existingUsers.Length > 0)
+                {
+                    responsePacket.type = (int)PacketType.에러;
+                    responsePacket.errorMessage = "이미 존재하는 아이디입니다.";
+                }
+                else
+                {
+                    personTable.Rows.Add(null, signUp.userId, signUp.password, signUp.name);
+                    responsePacket.type = (int)PacketType.회원가입;
+                }
+
+                byte[] serializedData = Packet.Serialize(responsePacket);
+                this.m_networkstream.Write(serializedData, 0, serializedData.Length);
+                this.m_networkstream.Flush();
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message);
             }
         }
 
@@ -582,6 +609,5 @@ namespace PacketServer
             this.m_networkstream.Write(serializedData, 0, serializedData.Length);
             this.m_networkstream.Flush();
         }
-
     }
 }
