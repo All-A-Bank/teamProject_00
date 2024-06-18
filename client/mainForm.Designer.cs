@@ -43,14 +43,15 @@
             this.lblRemainBudget = new System.Windows.Forms.Label();
             this.lvwExpense = new System.Windows.Forms.ListView();
             this.lvwIncome = new System.Windows.Forms.ListView();
+            this.btnExit = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // btn_InOut
             // 
-            this.btn_InOut.Location = new System.Drawing.Point(612, 132);
+            this.btn_InOut.Location = new System.Drawing.Point(563, 130);
             this.btn_InOut.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btn_InOut.Name = "btn_InOut";
-            this.btn_InOut.Size = new System.Drawing.Size(112, 49);
+            this.btn_InOut.Size = new System.Drawing.Size(112, 56);
             this.btn_InOut.TabIndex = 0;
             this.btn_InOut.Text = "수입 / 지출";
             this.btn_InOut.UseVisualStyleBackColor = true;
@@ -58,10 +59,10 @@
             // 
             // btn_budget
             // 
-            this.btn_budget.Location = new System.Drawing.Point(612, 208);
+            this.btn_budget.Location = new System.Drawing.Point(563, 215);
             this.btn_budget.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btn_budget.Name = "btn_budget";
-            this.btn_budget.Size = new System.Drawing.Size(112, 38);
+            this.btn_budget.Size = new System.Drawing.Size(112, 48);
             this.btn_budget.TabIndex = 1;
             this.btn_budget.Text = "예산";
             this.btn_budget.UseVisualStyleBackColor = true;
@@ -69,10 +70,10 @@
             // 
             // btn_report
             // 
-            this.btn_report.Location = new System.Drawing.Point(612, 264);
+            this.btn_report.Location = new System.Drawing.Point(563, 290);
             this.btn_report.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btn_report.Name = "btn_report";
-            this.btn_report.Size = new System.Drawing.Size(112, 30);
+            this.btn_report.Size = new System.Drawing.Size(112, 55);
             this.btn_report.TabIndex = 2;
             this.btn_report.Text = "보고서";
             this.btn_report.UseVisualStyleBackColor = true;
@@ -187,11 +188,23 @@
             this.lvwIncome.TabIndex = 19;
             this.lvwIncome.UseCompatibleStateImageBehavior = false;
             // 
+            // btnExit
+            // 
+            this.btnExit.Location = new System.Drawing.Point(693, 29);
+            this.btnExit.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.btnExit.Name = "btnExit";
+            this.btnExit.Size = new System.Drawing.Size(121, 30);
+            this.btnExit.TabIndex = 20;
+            this.btnExit.Text = "프로그램 종료";
+            this.btnExit.UseVisualStyleBackColor = true;
+            this.btnExit.Click += new System.EventHandler(this.btnExit_Click);
+            // 
             // mainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(848, 419);
+            this.Controls.Add(this.btnExit);
             this.Controls.Add(this.lvwIncome);
             this.Controls.Add(this.lvwExpense);
             this.Controls.Add(this.lblRemainBudget);
@@ -233,5 +246,6 @@
         private System.Windows.Forms.Label lblRemainBudget;
         private System.Windows.Forms.ListView lvwExpense;
         private System.Windows.Forms.ListView lvwIncome;
+        private System.Windows.Forms.Button btnExit;
     }
 }

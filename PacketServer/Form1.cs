@@ -144,203 +144,233 @@ namespace PacketServer
             this.m_listener = new TcpListener(7777);
             this.m_listener.Start();
 
-            if (!this.m_bClientOn)
+            while (true)
             {
-                this.Invoke(new MethodInvoker(delegate ()
+                if (!this.m_bClientOn)
                 {
-                    this.txt_server_state.AppendText("클라이언트 접속 대기중 \r\n");
-                }));
-            }
+                    this.Invoke(new MethodInvoker(delegate ()
+                    {
+                        this.txt_server_state.AppendText("클라이언트 접속 대기중 \r\n");
+                    }));
+                }
 
-            TcpClient client = this.m_listener.AcceptTcpClient();
-
-            if (client.Connected)
-            {
-                this.m_bClientOn = true;
-                this.Invoke(new MethodInvoker(delegate ()
+                try
                 {
-                    this.txt_server_state.AppendText("클라이언트 접속 \r\n");
-                }));
+                    TcpClient client = this.m_listener.AcceptTcpClient();
+                    this.Invoke(new MethodInvoker(delegate ()
+                    {
+                        this.txt_server_state.AppendText("클라이언트 접속 \r\n");
+                    }));
 
-                m_networkstream = client.GetStream();
+                    m_networkstream = client.GetStream();
+                    this.m_bClientOn = true;
+
+                    Thread clientThread = new Thread(() => HandleClient(client));
+                    clientThread.Start();
+                }
+                catch (Exception ex)
+                {
+                    this.Invoke(new MethodInvoker(delegate ()
+                    {
+                        this.txt_server_state.AppendText("서버 오류: " + ex.Message + "\r\n");
+                    }));
+                }
             }
+        }
 
+        private void HandleClient(TcpClient client)
+        {
             int nRead = 0;
+            NetworkStream clientStream = client.GetStream();
 
-            while (this.m_bClientOn)
+            while (true)
             {
                 try
                 {
                     nRead = 0;
-                    nRead = this.m_networkstream.Read(readBuffer, 0, 1024 * 4);
+                    nRead = clientStream.Read(readBuffer, 0, 1024 * 4);
+                    if (nRead == 0)
+                    {
+                        break;
+                    }
+
+                    Packet packet = (Packet)Packet.Desserialize(this.readBuffer);
+                    ProcessPacket(packet);
                 }
                 catch
                 {
-                    this.m_bClientOn = false;
-                    this.m_networkstream = null;
+                    break;
                 }
+            }
 
-                Packet packet = (Packet)Packet.Desserialize(this.readBuffer);
+            this.Invoke(new MethodInvoker(delegate ()
+            {
+                this.txt_server_state.AppendText("클라이언트 연결 끊김 \r\n");
+            }));
 
-                switch ((int)packet.type)
-                {
-                    case (int)PacketType.회원가입:
+            clientStream.Close();
+            client.Close();
+            this.m_bClientOn = false;
+        }
+
+        private void ProcessPacket(Packet packet)
+        {
+            switch ((int)packet.type)
+            {
+                case (int)PacketType.회원가입:
+                    {
+                        this.m_signUpClass = (SignUp)Packet.Desserialize(this.readBuffer);
+                        this.Invoke(new MethodInvoker(delegate ()
                         {
-                            this.m_signUpClass = (SignUp)Packet.Desserialize(this.readBuffer);
-                            this.Invoke(new MethodInvoker(delegate ()
+                            SendSignUpResponse(this.m_signUpClass);
+                        }));
+                        break;
+                    }
+
+                case (int)PacketType.로그인:
+                    {
+                        this.m_loginClass = (Login)Packet.Desserialize(this.readBuffer);
+                        this.Invoke(new MethodInvoker(delegate ()
+                        {
+                            bool loginSuccess = checkValidLogin(this.m_loginClass.userId, this.m_loginClass.password);
+
+                            if (loginSuccess)
                             {
-                                SendSignUpResponse(this.m_signUpClass);
-                            }));
-                            break;
-                        }
-
-                    case (int)PacketType.로그인:
-                        {
-                            this.m_loginClass = (Login)Packet.Desserialize(this.readBuffer);
-                            this.Invoke(new MethodInvoker(delegate ()
+                                this.txt_server_state.AppendText("로그인 Request 성공. " + "Login Class Data is " + this.m_loginClass.userId + "\r\n");
+                                SendLoginSuccessPacket(m_loginClass.userId);
+                            }
+                            else
                             {
-                                bool loginSuccess = checkValidLogin(this.m_loginClass.userId, this.m_loginClass.password);
+                                this.txt_server_state.AppendText("로그인 Request 실패. 잘못된 사용자 ID 또는 비밀번호.\r\n");
+                                SendErrorPacket("로그인 실패. 아이디 또는 비밀번호가 일치하지 않습니다.");
+                            }
+                        }));
+                        break;
+                    }
 
-                                if (loginSuccess)
-                                {
-                                    this.txt_server_state.AppendText("로그인 Request 성공. " + "Login Class Data is " + this.m_loginClass.userId + "\r\n");
-                                    SendLoginSuccessPacket(m_loginClass.userId);
-                                }
-                                else
-                                {
-                                    this.txt_server_state.AppendText("로그인 Request 실패. 잘못된 사용자 ID 또는 비밀번호.\r\n");
-                                    SendErrorPacket("로그인 실패. 아이디 또는 비밀번호가 일치하지 않습니다.");
-                                }
-                            }));
-                            break;
-                        }
+                case (int)PacketType.유저이름과예산요청:
+                    {
+                        LogMessage("유저 이름과 예산 요청");
+                        string userId = packet.message[0];
+                        SendUserNameAndBudgetResponse(userId);
+                        break;
+                    }
 
-                    case (int)PacketType.유저이름과예산요청:
+                case (int)PacketType.수입추가:
+                    {
+                        this.m_incomeAdd = (IncomeAdd)Packet.Desserialize(this.readBuffer);
+
+                        this.Invoke(new MethodInvoker(delegate ()
                         {
-                            LogMessage("유저 이름과 예산 요청");
-                            string userId = packet.message[0];
-                            SendUserNameAndBudgetResponse(userId);
-                            break;
-                        }
+                            this.txt_server_state.AppendText("수입추가 Request 성공. " + "IncomeAdd Class Data is " + this.m_incomeAdd.category_id + " / " + this.m_incomeAdd.userId + " / " + this.m_incomeAdd.amount + " / " + this.m_incomeAdd.description + " / " + this.m_incomeAdd.date + "\r\n");
+                            dataSet.Tables["Income"].Rows.Add(null, this.m_incomeAdd.category_id, this.m_incomeAdd.userId, this.m_incomeAdd.amount, this.m_incomeAdd.description, this.m_incomeAdd.date);
+                        }));
+                        break;
+                    }
 
-                    case (int)PacketType.수입추가:
+                case (int)PacketType.지출추가:
+                    {
+                        this.m_expenseAdd = (ExpenseAdd)Packet.Desserialize(this.readBuffer);
+
+                        this.Invoke(new MethodInvoker(delegate ()
                         {
-                            this.m_incomeAdd = (IncomeAdd)Packet.Desserialize(this.readBuffer);
+                            this.txt_server_state.AppendText("지출추가 Request 성공. " + "ExpenseAdd Class Data is " + this.m_expenseAdd.category_id + " / " + this.m_expenseAdd.userId + " / " + this.m_expenseAdd.amount + " / " + this.m_expenseAdd.description + " / " + this.m_expenseAdd.date + "\r\n");
+                            dataSet.Tables["Expense"].Rows.Add(null, this.m_expenseAdd.category_id, this.m_expenseAdd.userId, this.m_expenseAdd.amount, this.m_expenseAdd.description, this.m_expenseAdd.date);
+                        }));
+                        break;
+                    }
 
-                            this.Invoke(new MethodInvoker(delegate ()
-                            {
-                                this.txt_server_state.AppendText("수입추가 Request 성공. " + "IncomeAdd Class Data is " + this.m_incomeAdd.category_id + " / " + this.m_incomeAdd.userId + " / " + this.m_incomeAdd.amount + " / " + this.m_incomeAdd.description + " / " + this.m_incomeAdd.date + "\r\n");
-                                dataSet.Tables["Income"].Rows.Add(null, this.m_incomeAdd.category_id, this.m_incomeAdd.userId ,this.m_incomeAdd.amount, this.m_incomeAdd.description, this.m_incomeAdd.date);
-                            }));
-                            break;
-                        }
+                case (int)PacketType.수입목록요청:
+                    {
+                        // packet.message를 DateTime으로 변환
+                        string[] msg = packet.message[0].Split(',');
+                        string userId = msg[0];
+                        string date = msg[1];
 
-                    case (int)PacketType.지출추가:
+                        LogMessage($"수입목록 Response 성공. {userId} {date}");
+
+                        SendIncomeResponse(userId, date);
+                        //SendExpenseResponse(userId, date);
+
+                        break;
+                    }
+
+                case (int)PacketType.지출목록요청:
+                    {
+                        // packet.message를 DateTime으로 변환
+                        string[] msg = packet.message[0].Split(',');
+                        string userId = msg[0];
+                        string date = msg[1];
+
+                        LogMessage($"지출목록 Response 성공. {userId} {date}");
+
+                        SendExpenseResponse(userId, date);
+
+                        break;
+                    }
+
+                case (int)PacketType.예산추가:
+                    {
+                        this.m_budgetClass = (Budget)Packet.Desserialize(this.readBuffer);
+
+                        this.Invoke(new MethodInvoker(delegate ()
                         {
-                            this.m_expenseAdd = (ExpenseAdd)Packet.Desserialize(this.readBuffer);
-
-                            this.Invoke(new MethodInvoker(delegate ()
-                            {
-                                this.txt_server_state.AppendText("지출추가 Request 성공. " + "ExpenseAdd Class Data is " + this.m_expenseAdd.category_id + " / " + this.m_expenseAdd.userId + " / " + this.m_expenseAdd.amount + " / " + this.m_expenseAdd.description + " / " + this.m_expenseAdd.date + "\r\n");
-                                dataSet.Tables["Expense"].Rows.Add(null, this.m_expenseAdd.category_id, this.m_expenseAdd.userId, this.m_expenseAdd.amount, this.m_expenseAdd.description, this.m_expenseAdd.date);
-                            }));
-                            break;
-                        }
-
-                    case (int)PacketType.수입목록요청:
+                            this.txt_server_state.AppendText("예산추가 Request 성공. " + "Budget Class Data is " + this.m_budgetClass.amount + " / " + this.m_budgetClass.userId + "\r\n");
+                            dataSet.Tables["Budgets"].Rows.Add(null, this.m_budgetClass.amount, this.m_budgetClass.userId);
+                        }));
+                        break;
+                    }
+                case (int)PacketType.재정데이터요청:
+                    {
+                        //string userId = packet.message[0];
+                        string[] msg = packet.message[0].Split(',');
+                        string userId = msg[0];
+                        string date = msg[1];
+                        this.Invoke(new MethodInvoker(delegate ()
                         {
-                            // packet.message를 DateTime으로 변환
-                            string[] msg = packet.message[0].Split(',');
-                            string userId = msg[0];
-                            string date = msg[1];
-                            
-                            LogMessage($"수입목록 Response 성공. {userId} {date}");
+                            SendFinancialDataPacket(userId, date);
+                        }));
 
-                            SendIncomeResponse(userId, date);
-                            //SendExpenseResponse(userId, date);
-
-                            break;
-                        }
-
-                    case (int)PacketType.지출목록요청:
+                        break;
+                    }
+                case (int)PacketType.카테고리이름요청:
+                    {
+                        string categoryId = packet.message[0];
+                        this.Invoke(new MethodInvoker(delegate ()
                         {
-                            // packet.message를 DateTime으로 변환
-                            string[] msg = packet.message[0].Split(',');
-                            string userId = msg[0];
-                            string date = msg[1];
+                            SendCategoryName(categoryId);
+                        }));
 
-                            LogMessage($"지출목록 Response 성공. {userId} {date}");
+                        break;
+                    }
 
-                            SendExpenseResponse(userId, date);
+                case (int)PacketType.수입월목록요청:
+                    {
+                        string[] msg = packet.message[0].Split(',');
+                        string userId = msg[0];
+                        string yearMonth = msg[1];
 
-                            break;
-                        }
-
-                    case (int)PacketType.예산추가:
+                        this.Invoke(new MethodInvoker(delegate ()
                         {
-                            this.m_budgetClass = (Budget)Packet.Desserialize(this.readBuffer);
+                            this.txt_server_state.AppendText("수입 월 목록 요청: " + userId + " " + yearMonth + "\r\n");
+                            SendMonthlyIncomeResponse(userId, yearMonth);
+                        }));
+                        break;
+                    }
 
-                            this.Invoke(new MethodInvoker(delegate ()
-                            {
-                                this.txt_server_state.AppendText("예산추가 Request 성공. " + "Budget Class Data is " + this.m_budgetClass.amount + " / " + this.m_budgetClass.userId + "\r\n");
-                                dataSet.Tables["Budgets"].Rows.Add(null, this.m_budgetClass.amount, this.m_budgetClass.userId);
-                            }));
-                            break;
-                        }
-                    case (int)PacketType.재정데이터요청:
+                case (int)PacketType.지출월목록요청:
+                    {
+                        string[] msg = packet.message[0].Split(',');
+                        string userId = msg[0];
+                        string yearMonth = msg[1];
+
+                        this.Invoke(new MethodInvoker(delegate ()
                         {
-                            //string userId = packet.message[0];
-                            string[] msg = packet.message[0].Split(',');
-                            string userId = msg[0];
-                            string date = msg[1];
-                            this.Invoke(new MethodInvoker(delegate ()
-                            {
-                                SendFinancialDataPacket(userId, date);
-                            }));
-                            
-                            break;
-                        }
-                    case (int)PacketType.카테고리이름요청:
-                        {
-                            string categoryId = packet.message[0];
-                            this.Invoke(new MethodInvoker(delegate ()
-                            {
-                                SendCategoryName(categoryId);
-                            }));
-                            
-                            break;
-                        }
-
-                    case (int)PacketType.수입월목록요청:
-                        {
-                            string[] msg = packet.message[0].Split(',');
-                            string userId = msg[0];
-                            string yearMonth = msg[1];
-
-                            this.Invoke(new MethodInvoker(delegate ()
-                            {
-                                this.txt_server_state.AppendText("수입 월 목록 요청: " + userId + " " + yearMonth + "\r\n");
-                                SendMonthlyIncomeResponse(userId, yearMonth);
-                            }));
-                            break;
-                        }
-
-                    case (int)PacketType.지출월목록요청:
-                        {
-                            string[] msg = packet.message[0].Split(',');
-                            string userId = msg[0];
-                            string yearMonth = msg[1];
-
-                            this.Invoke(new MethodInvoker(delegate ()
-                            {
-                                this.txt_server_state.AppendText("지출 월 목록 요청: " + userId + " " + yearMonth + "\r\n");
-                                SendMonthlyExpenseResponse(userId, yearMonth);
-                            }));
-                            break;
-                        }
-
-
-                }
+                            this.txt_server_state.AppendText("지출 월 목록 요청: " + userId + " " + yearMonth + "\r\n");
+                            SendMonthlyExpenseResponse(userId, yearMonth);
+                        }));
+                        break;
+                    }
             }
         }
 

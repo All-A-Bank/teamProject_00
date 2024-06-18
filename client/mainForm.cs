@@ -296,5 +296,18 @@ namespace teamProject_00
             await RequestUserNameAndBudget();
             await SetCurrentDate();
         }
+
+        private void btnExit_Click(object sender, EventArgs e)
+        {
+            DialogResult dialogResult = MessageBox.Show("프로그램을 종료하시겠습니까?", "종료 확인", MessageBoxButtons.YesNo);
+
+            if (dialogResult == DialogResult.Yes)
+            {
+                m_networkStream.Close();
+                m_client.Close();
+
+                this.Close();
+            }
+        }
     }
 }
