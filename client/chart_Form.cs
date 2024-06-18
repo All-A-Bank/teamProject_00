@@ -37,7 +37,7 @@ namespace teamProject_00
 
         private async void LoadDataAsync()
         {
-            await RequestFinancialData();
+            await RequestFinancialData(dateTimePicker1.Value.Date.ToString("yyyy-MM-dd"));
         }
 
         Dictionary<string, float> expense = new Dictionary<string, float>
@@ -55,11 +55,11 @@ namespace teamProject_00
             public decimal Amount { get; set; }
         }
 
-        private async Task RequestFinancialData()
+        private async Task RequestFinancialData(string date)
         {
             Packet requestPacket = new Packet();
             requestPacket.type = (int)PacketType.재정데이터요청;
-            requestPacket.message.Add(this.userId);
+            requestPacket.message.Add(this.userId + "," + date);
 
             byte[] serializedData = Packet.Serialize(requestPacket);
             await this.m_networkStream.WriteAsync(serializedData, 0, serializedData.Length);
@@ -266,7 +266,7 @@ namespace teamProject_00
         {
             Task.Run(async () =>
             {
-                await RequestFinancialData();
+                await RequestFinancialData(dateTimePicker1.Value.Date.ToString("yyyy-MM-dd"));
             });
         }
      

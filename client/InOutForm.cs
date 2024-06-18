@@ -17,7 +17,7 @@ namespace teamProject_00
 {
     public partial class InOutForm : Form
     {
-        
+
 
         private NetworkStream m_networkStream;
         private TcpClient m_client;
@@ -57,7 +57,7 @@ namespace teamProject_00
         }
         private async void LoadDataAsync()
         {
-            await RequestFinancialData();
+            await RequestFinancialData(dateTimePicker1.Value.Date.ToString("yyyy-MM-dd"));
             await SetCurrentDate(dateTimePicker1.Value.Date.ToString("yyyy-MM-dd"));
         }
 
@@ -79,6 +79,7 @@ namespace teamProject_00
         {
             lvwIncome.Items.Clear();
             lvwExpense.Items.Clear();
+            chart1.Series.Clear();
 
             incomeCnt = 1;
             expenseCnt = 1;
@@ -86,6 +87,8 @@ namespace teamProject_00
             string selectedDate = dateTimePicker1.Value.Date.ToString("yyyy-MM-dd");
 
             await SetCurrentDate(selectedDate);
+
+            await UpdatePieChart(selectedDate);
         }
 
         private async Task SetCurrentDate(string selectedDate)
@@ -94,14 +97,20 @@ namespace teamProject_00
             await RequestExpenseList(selectedDate);
         }
 
+        private async Task UpdatePieChart(string selectedDate)
+        {
+            await RequestFinancialData(dateTimePicker1.Value.Date.ToString("yyyy-MM-dd"));
+            await DisplayPieChart();
+        }
+
         private void InOutForm_Load(object sender, EventArgs e)
         {
             Task.Run(async () =>
             {
                 await SetCurrentDate(dateTimePicker1.Value.Date.ToString("yyyy-MM-dd"));
-                await RequestFinancialData();
+                await RequestFinancialData(dateTimePicker1.Value.Date.ToString("yyyy-MM-dd"));
             });
-            
+
         }
 
         private async Task RequestIncomeList(string date)
@@ -249,11 +258,11 @@ namespace teamProject_00
             public decimal Amount { get; set; }
         }
 
-        private async Task RequestFinancialData()
+        private async Task RequestFinancialData(string date)
         {
             Packet requestPacket = new Packet();
             requestPacket.type = (int)PacketType.재정데이터요청;
-            requestPacket.message.Add(this.userId);
+            requestPacket.message.Add(this.userId + "," + date);
 
             byte[] serializedData = Packet.Serialize(requestPacket);
             await this.m_networkStream.WriteAsync(serializedData, 0, serializedData.Length);
@@ -271,17 +280,18 @@ namespace teamProject_00
                 {
                     string financialDataMessage = string.Join(",", responsePacket.message);
                     ParseFinancialData(financialDataMessage);
-                    DisplayPieChart("all");
+                    await DisplayPieChart();
                 }
             }
         }
-        private void DisplayPieChart(string filter)
+        private async Task DisplayPieChart()
         {
             var chartData = new Dictionary<string, decimal>();
-            foreach (var data in financialDataList)
+            await Task.Run(() =>
             {
-                if (filter == "all" )
+                foreach (var data in financialDataList)
                 {
+
                     string categoryName = data.CategoryName;
                     if (!chartData.ContainsKey(categoryName))
                     {
@@ -289,7 +299,7 @@ namespace teamProject_00
                     }
                     chartData[categoryName] += data.Amount;
                 }
-            }
+            });
             if (this.InvokeRequired)
             {
                 this.Invoke(new MethodInvoker(delegate ()
@@ -351,12 +361,12 @@ namespace teamProject_00
 
                 chart1.Invalidate();
             }
-        
 
 
 
 
-    }
+
+        }
 
         private void ParseFinancialData(string financialDataMessage)
         {

@@ -289,10 +289,13 @@ namespace PacketServer
                         }
                     case (int)PacketType.재정데이터요청:
                         {
-                            string userId = packet.message[0];
+                            //string userId = packet.message[0];
+                            string[] msg = packet.message[0].Split(',');
+                            string userId = msg[0];
+                            string date = msg[1];
                             this.Invoke(new MethodInvoker(delegate ()
                             {
-                                SendFinancialDataPacket(userId);
+                                SendFinancialDataPacket(userId, date);
                             }));
                             
                             break;
@@ -505,7 +508,7 @@ namespace PacketServer
         }
 
 
-        private void SendFinancialDataPacket(string userId)
+        private void SendFinancialDataPacket(string userId, string date)
         {
             DataTable personTable = dataSet.Tables["Person"];
             DataTable incomeTable = dataSet.Tables["Income"];
@@ -520,8 +523,8 @@ namespace PacketServer
             }
 
             int personId = (int)person[0]["person_id"];
-            DataRow[] expenses = expenseTable.Select($"userId = '{userId}'");
-            DataRow[] incomes = incomeTable.Select($"userId = '{userId}'");
+            DataRow[] expenses = expenseTable.Select($"userId = '{userId}' AND CONVERT(date, 'System.String') LIKE '{date}%'");
+            DataRow[] incomes = incomeTable.Select($"userId = '{userId}' AND CONVERT(date, 'System.String') LIKE '{date}%'");
 
             List<string> financialDataList = new List<string>();
 
