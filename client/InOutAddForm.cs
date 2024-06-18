@@ -62,11 +62,11 @@ namespace teamProject_00
             comboBoxType.Items.Add("Expense");
 
             // 카테고리 항목 추가
-            comboBoxCategory.Items.Add(new ComboBoxItem("식비", 1));
-            comboBoxCategory.Items.Add(new ComboBoxItem("교통비", 2));
-            comboBoxCategory.Items.Add(new ComboBoxItem("여가생활", 3));
-            comboBoxCategory.Items.Add(new ComboBoxItem("급여", 4));
-            comboBoxCategory.Items.Add(new ComboBoxItem("연금", 5));
+            comboBoxCategory.Items.Add(new ComboBoxItem("식비", 0));
+            comboBoxCategory.Items.Add(new ComboBoxItem("교통비", 1));
+            comboBoxCategory.Items.Add(new ComboBoxItem("여가생활", 2));
+            comboBoxCategory.Items.Add(new ComboBoxItem("급여", 3));
+            comboBoxCategory.Items.Add(new ComboBoxItem("연금", 4));
         }
 
 

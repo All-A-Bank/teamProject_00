@@ -306,7 +306,7 @@ namespace teamProject_00
                 m_networkStream.Close();
                 m_client.Close();
 
-                this.Close();
+                Application.Exit();
             }
         }
     }
