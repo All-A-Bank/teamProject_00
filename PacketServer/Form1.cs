@@ -107,23 +107,6 @@ namespace PacketServer
             dataSet.Tables["Categories"].Rows.Add(null, "여가생활");
             dataSet.Tables["Categories"].Rows.Add(null, "급여");
             dataSet.Tables["Categories"].Rows.Add(null, "연금");
-
-            // 사용자
-            dataSet.Tables["Person"].Rows.Add(null, "user1", "p", "홍길동");
-            dataSet.Tables["Person"].Rows.Add(null, "user2", "password2", "김철수");
-
-            // 지출 예시 데이터
-            dataSet.Tables["Expense"].Rows.Add(null, 0, "user1", 100, "식사", DateTime.Now);
-            dataSet.Tables["Expense"].Rows.Add(null, 2, "user1", 200, "쇼핑", DateTime.Now);
-            dataSet.Tables["Expense"].Rows.Add(null, 1, "user1", 300, "기타", DateTime.Now);
-
-            // 수입 예시 데이터
-            dataSet.Tables["Income"].Rows.Add(null, 4, "user1", 200, "월급", DateTime.Now);
-            dataSet.Tables["Income"].Rows.Add(null, 3, "user1", 500, "연금", DateTime.Now);
-
-            dataGridView1.DataSource = dataSet.Tables["Person"];
-            dataGridView2.DataSource = dataSet.Tables["Income"];
-            dataGridView3.DataSource = dataSet.Tables["Expense"];
         }
 
         private void LogMessage(string message)

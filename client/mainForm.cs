@@ -275,15 +275,15 @@ namespace teamProject_00
         {
             switch (categoryId)
             {
-                case "1":
+                case "0":
                     return "식비";
-                case "2":
+                case "1":
                     return "교통비";
-                case "3":
+                case "2":
                     return "여가생활";
-                case "4":
+                case "3":
                     return "급여";
-                case "5":
+                case "4":
                     return "연금";
                 default:
                     return "기타";
