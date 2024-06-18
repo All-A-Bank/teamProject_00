@@ -22,3 +22,9 @@ C:\Users\rayun\source\repos\team_project_git\Packet\obj\Debug\PacketClass.csproj
 C:\Users\rayun\source\repos\team_project_git\Packet\obj\Debug\PacketClass.csproj.CoreCompileInputs.cache
 C:\Users\rayun\source\repos\team_project_git\Packet\obj\Debug\Packet.dll
 C:\Users\rayun\source\repos\team_project_git\Packet\obj\Debug\Packet.pdb
+C:\Users\rayun\source\repos\teamProject_00\Packet\bin\Debug\Packet.dll
+C:\Users\rayun\source\repos\teamProject_00\Packet\bin\Debug\Packet.pdb
+C:\Users\rayun\source\repos\teamProject_00\Packet\obj\Debug\PacketClass.csproj.AssemblyReference.cache
+C:\Users\rayun\source\repos\teamProject_00\Packet\obj\Debug\PacketClass.csproj.CoreCompileInputs.cache
+C:\Users\rayun\source\repos\teamProject_00\Packet\obj\Debug\Packet.dll
+C:\Users\rayun\source\repos\teamProject_00\Packet\obj\Debug\Packet.pdb

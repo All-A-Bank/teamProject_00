@@ -27,6 +27,7 @@ namespace teamProject_00
         public int expenseCnt = 1;
 
         public decimal budgetAmount = 0;
+        public decimal incomdeAmount = 0;
         public decimal expenseAmount = 0;
 
         public mainForm(NetworkStream networkStream, TcpClient client, string userId)
@@ -37,16 +38,20 @@ namespace teamProject_00
             this.userId = userId;
 
             lvwExpense.View = View.Details;
+            lvwExpense.Columns.Clear();
             lvwExpense.Columns.Add("카테고리");
             lvwExpense.Columns.Add("가격");
             lvwExpense.Columns.Add("설명");
             lvwExpense.Columns.Add("날짜");
 
             lvwIncome.View = View.Details;
+            lvwIncome.Columns.Clear();
             lvwIncome.Columns.Add("카테고리");
             lvwIncome.Columns.Add("가격");
             lvwIncome.Columns.Add("설명");
             lvwIncome.Columns.Add("날짜");
+
+            this.Activated += new EventHandler(this.mainForm_Activated);
         }
 
 
@@ -80,26 +85,29 @@ namespace teamProject_00
 
         private void mainForm_Load(object sender, EventArgs e)
         {
-            RequestUserNameAndBudget();
-            SetCurrentDate();
+            Task.Run(async () =>
+            {
+                await RefreshData();
+            });
         }
 
-        private void RequestUserNameAndBudget()
+
+        private async Task RequestUserNameAndBudget()
         {
             Packet requestPacket = new Packet();
             requestPacket.type = (int)PacketType.유저이름과예산요청;
             requestPacket.message.Add(this.userId);
 
             byte[] serializedData = Packet.Serialize(requestPacket);
-            this.m_networkStream.Write(serializedData, 0, serializedData.Length);
-            this.m_networkStream.Flush();
+            await this.m_networkStream.WriteAsync(serializedData, 0, serializedData.Length);
+            await this.m_networkStream.FlushAsync();
 
-            Task.Run(() => ReceiveResponse());
+            await ReceiveResponse();
         }
 
-        private void ReceiveResponse()
+        private async Task ReceiveResponse()
         {
-            int bytesRead = this.m_networkStream.Read(this.readBuffer, 0, this.readBuffer.Length);
+            int bytesRead = await this.m_networkStream.ReadAsync(this.readBuffer, 0, this.readBuffer.Length);
             if (bytesRead > 0)
             {
                 Packet responsePacket = (Packet)Packet.Desserialize(this.readBuffer);
@@ -107,6 +115,7 @@ namespace teamProject_00
                 {
                     string userName = responsePacket.message[0];
                     string amount = responsePacket.message[1];
+
                     this.Invoke(new MethodInvoker(delegate ()
                     {
                         label_name.Text = userName;
@@ -118,7 +127,7 @@ namespace teamProject_00
             }
         }
 
-        private void SetCurrentDate()
+        private async Task SetCurrentDate()
         {
             this.Invoke(new MethodInvoker(delegate ()
             {
@@ -126,46 +135,52 @@ namespace teamProject_00
             }));
 
             string selectedDate = DateTime.Now.ToString("yyyy-MM-dd");
-            RequestIncomeList(selectedDate);
-            RequestExpenseList(selectedDate);
+            await RequestIncomeList(selectedDate);
+            await RequestExpenseList(selectedDate);
         }
 
-        private void RequestIncomeList(string date)
+        private async Task RequestIncomeList(string date)
         {
             Packet requestPacket = new Packet();
             requestPacket.type = (int)PacketType.수입목록요청;
             requestPacket.message.Add(this.userId + "," + date);
 
             byte[] serializedData = Packet.Serialize(requestPacket);
-            this.m_networkStream.Write(serializedData, 0, serializedData.Length);
-            this.m_networkStream.Flush();
+            await this.m_networkStream.WriteAsync(serializedData, 0, serializedData.Length);
+            await this.m_networkStream.FlushAsync();
 
-            Task.Run(() => ReceiveIncomeListResponse());
+            await ReceiveIncomeListResponse();
         }
 
-        private void RequestExpenseList(string date)
+        private async Task RequestExpenseList(string date)
         {
             Packet requestPacket = new Packet();
             requestPacket.type = (int)PacketType.지출목록요청;
             requestPacket.message.Add(this.userId + "," + date);
 
             byte[] serializedData = Packet.Serialize(requestPacket);
-            this.m_networkStream.Write(serializedData, 0, serializedData.Length);
-            this.m_networkStream.Flush();
+            await this.m_networkStream.WriteAsync(serializedData, 0, serializedData.Length);
+            await this.m_networkStream.FlushAsync();
 
-            Task.Run(() => ReceiveExpenseListResponse());
+            await ReceiveExpenseListResponse();
         }
 
-        private void ReceiveIncomeListResponse()
+        private async Task ReceiveIncomeListResponse()
         {
-            int bytesRead = this.m_networkStream.Read(this.readBuffer, 0, this.readBuffer.Length);
+            int bytesRead = await this.m_networkStream.ReadAsync(this.readBuffer, 0, this.readBuffer.Length);
             if (bytesRead > 0)
             {
                 Packet responsePacket = (Packet)Packet.Desserialize(this.readBuffer);
 
                 if ((PacketType)responsePacket.type == PacketType.수입목록요청)
                 {
+                    this.Invoke(new MethodInvoker(delegate
+                    {
+                        lvwIncome.Items.Clear();
+                    }));
+                    
                     List<string> msgList = responsePacket.message;
+
 
                     foreach (string msg in msgList)
                     {
@@ -182,25 +197,41 @@ namespace teamProject_00
                         lvwItem.SubItems.Add(description);
                         lvwItem.SubItems.Add(date);
 
-                        lvwIncome.Invoke(new MethodInvoker(delegate
+                        this.Invoke(new MethodInvoker(delegate
                         {
                             lvwIncome.Items.Add(lvwItem);
                         }));
+
+
+
+                        //디버깅용 로그 출력
+                        Console.WriteLine($"Income: {categoryName}, {amount}, {description}, {date}");
+
                     }
+
+
                 }
             }
         }
 
-        private void ReceiveExpenseListResponse()
+        private async Task ReceiveExpenseListResponse()
         {
-            int bytesRead = this.m_networkStream.Read(this.readBuffer, 0, this.readBuffer.Length);
+            int bytesRead = await this.m_networkStream.ReadAsync(this.readBuffer, 0, this.readBuffer.Length);
             if (bytesRead > 0)
             {
                 Packet responsePacket = (Packet)Packet.Desserialize(this.readBuffer);
 
                 if ((PacketType)responsePacket.type == PacketType.지출목록요청)
                 {
+                    this.Invoke(new MethodInvoker(delegate
+                    {
+                        lvwExpense.Items.Clear();
+                        expenseAmount = 0;
+                    }));
+
                     List<string> msgList = responsePacket.message;
+
+                   
 
                     foreach (string msg in msgList)
                     {
@@ -219,12 +250,20 @@ namespace teamProject_00
                         lvwItem.SubItems.Add(description);
                         lvwItem.SubItems.Add(date);
 
-                        lvwExpense.Invoke(new MethodInvoker(delegate
+                        this.Invoke(new MethodInvoker(delegate
                         {
                             lvwExpense.Items.Add(lvwItem);
                         }));
+
+
+
+
+                        // 디버깅용 로그 출력
+                        Console.WriteLine($"Expense: {categoryName}, {amount}, {description}, {date}");
                     }
-                    lblRemainBudget.Invoke(new MethodInvoker(delegate
+
+
+                    this.Invoke(new MethodInvoker(delegate
                     {
                         lblRemainBudget.Text = (budgetAmount - expenseAmount).ToString();
                     }));
@@ -249,6 +288,16 @@ namespace teamProject_00
                 default:
                     return "기타";
             }
+        }
+
+        private async void mainForm_Activated(object sender, EventArgs e)
+        {
+            await RefreshData();
+        }
+        private async Task RefreshData()
+        {
+            await RequestUserNameAndBudget();
+            await SetCurrentDate();
         }
     }
 }

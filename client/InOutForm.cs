@@ -17,6 +17,8 @@ namespace teamProject_00
 {
     public partial class InOutForm : Form
     {
+        
+
         private NetworkStream m_networkStream;
         private TcpClient m_client;
         private string userId;
@@ -33,19 +35,28 @@ namespace teamProject_00
             this.m_client = client;
             this.userId = userId;
             this.financialDataList = new List<FinancialData>();
-            RequestFinancialData();
 
             lvwExpense.View = View.Details;
+            lvwExpense.Columns.Add("id");
             lvwExpense.Columns.Add("카테고리");
             lvwExpense.Columns.Add("가격");
             lvwExpense.Columns.Add("설명");
             lvwExpense.Columns.Add("날짜");
 
             lvwIncome.View = View.Details;
+            lvwIncome.Columns.Add("id");
             lvwIncome.Columns.Add("카테고리");
             lvwIncome.Columns.Add("가격");
             lvwIncome.Columns.Add("설명");
             lvwIncome.Columns.Add("날짜");
+
+
+            LoadDataAsync();
+        }
+        private async void LoadDataAsync()
+        {
+            await RequestFinancialData();
+            await SetCurrentDate(dateTimePicker1.Value.Date.ToString("yyyy-MM-dd"));
         }
 
         private void chart_Click(object sender, EventArgs e)
@@ -62,7 +73,7 @@ namespace teamProject_00
             this.Hide();
         }
 
-        private void dateTimePicker1_ValueChanged(object sender, EventArgs e)
+        private async void dateTimePicker1_ValueChanged(object sender, EventArgs e)
         {
             lvwIncome.Items.Clear();
             lvwExpense.Items.Clear();
@@ -72,48 +83,53 @@ namespace teamProject_00
 
             string selectedDate = dateTimePicker1.Value.Date.ToString();
 
-            SetCurrentDate(selectedDate);
+            await SetCurrentDate(selectedDate);
         }
 
-        private void SetCurrentDate(string selectedDate)
+        private async Task SetCurrentDate(string selectedDate)
         {
-            RequestIncomeList(selectedDate);
-            RequestExpenseList(selectedDate);
+            await RequestIncomeList(selectedDate);
+            await RequestExpenseList(selectedDate);
         }
 
         private void InOutForm_Load(object sender, EventArgs e)
         {
+            Task.Run(async () =>
+            {
+                await RequestFinancialData();
+            });
+            
         }
 
-        private void RequestIncomeList(string date)
+        private async Task RequestIncomeList(string date)
         {
             Packet requestPacket = new Packet();
             requestPacket.type = (int)PacketType.수입목록요청;
             requestPacket.message.Add(this.userId + "," + date);
 
             byte[] serializedData = Packet.Serialize(requestPacket);
-            this.m_networkStream.Write(serializedData, 0, serializedData.Length);
-            this.m_networkStream.Flush();
+            await this.m_networkStream.WriteAsync(serializedData, 0, serializedData.Length);
+            await this.m_networkStream.FlushAsync();
 
-            Task.Run(() => ReceiveIncomeListResponse());
+            await ReceiveIncomeListResponse();
         }
 
-        private void RequestExpenseList(string date)
+        private async Task RequestExpenseList(string date)
         {
             Packet requestPacket = new Packet();
             requestPacket.type = (int)PacketType.지출목록요청;
             requestPacket.message.Add(this.userId + "," + date);
 
             byte[] serializedData = Packet.Serialize(requestPacket);
-            this.m_networkStream.Write(serializedData, 0, serializedData.Length);
-            this.m_networkStream.Flush();
+            await this.m_networkStream.WriteAsync(serializedData, 0, serializedData.Length);
+            await this.m_networkStream.FlushAsync();
 
-            Task.Run(() => ReceiveExpenseListResponse());
+            await ReceiveExpenseListResponse();
         }
 
-        private void ReceiveIncomeListResponse()
+        private async Task ReceiveIncomeListResponse()
         {
-            int bytesRead = this.m_networkStream.Read(this.readBuffer, 0, this.readBuffer.Length);
+            int bytesRead = await this.m_networkStream.ReadAsync(this.readBuffer, 0, this.readBuffer.Length);
             if (bytesRead > 0)
             {
                 Packet responsePacket = (Packet)Packet.Desserialize(this.readBuffer);
@@ -122,53 +138,57 @@ namespace teamProject_00
                 {
 
                     List<string> msgList = new List<string>();
-                    for (int i = 0; i < responsePacket.message.Count; i++)
+                    this.Invoke(new MethodInvoker(delegate ()
                     {
-                        ListViewItem lvwItem = new ListViewItem(Convert.ToString(incomeCnt));
-                        incomeCnt++;
-
-                        msgList.Add(responsePacket.message[i]);
-                        string[] msg = msgList[i].Split(',');
-
-                        string categoryId = msg[0];
-                        string categoryName;
-                        if (int.Parse(categoryId) == 1)
+                        for (int i = 0; i < responsePacket.message.Count; i++)
                         {
-                            categoryName = "식비";
+                            ListViewItem lvwItem = new ListViewItem(Convert.ToString(incomeCnt));
+                            incomeCnt++;
+
+                            msgList.Add(responsePacket.message[i]);
+                            string[] msg = msgList[i].Split(',');
+
+                            string categoryId = msg[0];
+                            string categoryName;
+                            if (int.Parse(categoryId) == 1)
+                            {
+                                categoryName = "식비";
+                            }
+                            else if (int.Parse(categoryId) == 2)
+                            {
+
+                                categoryName = "교통비";
+                            }
+                            else if (int.Parse(categoryId) == 3)
+                            {
+
+                                categoryName = "여가생활";
+                            }
+                            else if (int.Parse(categoryId) == 4)
+                            {
+
+                                categoryName = "급여";
+                            }
+                            else
+                            {
+
+                                categoryName = "연금";
+                            }
+
+
+                            string amount = msg[1];
+                            string description = msg[2];
+                            string date = msg[3];
+
+                            lvwItem.SubItems.Add(categoryName);
+                            lvwItem.SubItems.Add(amount);
+                            lvwItem.SubItems.Add(description);
+                            lvwItem.SubItems.Add(date);
+
+                            lvwIncome.Items.Add(lvwItem);
                         }
-                        else if (int.Parse(categoryId) == 2)
-                        {
-
-                            categoryName = "교통비";
-                        }
-                        else if (int.Parse(categoryId) == 3)
-                        {
-
-                            categoryName = "여가생활";
-                        }
-                        else if (int.Parse(categoryId) == 4)
-                        {
-
-                            categoryName = "급여";
-                        }
-                        else
-                        {
-
-                            categoryName = "연금";
-                        }
-
-
-                        string amount = msg[1];
-                        string description = msg[2];
-                        string date = msg[3];
-
-                        lvwItem.SubItems.Add(categoryName);
-                        lvwItem.SubItems.Add(amount);
-                        lvwItem.SubItems.Add(description);
-                        lvwItem.SubItems.Add(date);
-
-                        lvwIncome.Items.Add(lvwItem);
-                    }
+                    }));
+                    
 
                     this.Invoke(new MethodInvoker(delegate ()
                     {
@@ -184,9 +204,9 @@ namespace teamProject_00
             }
         }
 
-        private void ReceiveExpenseListResponse()
+        private async Task ReceiveExpenseListResponse()
         {
-            int bytesRead = this.m_networkStream.Read(this.readBuffer, 0, this.readBuffer.Length);
+            int bytesRead = await this.m_networkStream.ReadAsync(this.readBuffer, 0, this.readBuffer.Length);
             if (bytesRead > 0)
             {
                 Packet responsePacket = (Packet)Packet.Desserialize(this.readBuffer);
@@ -243,9 +263,7 @@ namespace teamProject_00
                         lvwExpense.Items.Add(lvwItem);
                     }
 
-                    this.Invoke(new MethodInvoker(delegate ()
-                    {
-                    }));
+
                 }
                 else if ((PacketType)responsePacket.type == PacketType.에러)
                 {
@@ -263,21 +281,21 @@ namespace teamProject_00
             public decimal Amount { get; set; }
         }
 
-        private void RequestFinancialData()
+        private async Task RequestFinancialData()
         {
             Packet requestPacket = new Packet();
             requestPacket.type = (int)PacketType.재정데이터요청;
             requestPacket.message.Add(this.userId);
 
             byte[] serializedData = Packet.Serialize(requestPacket);
-            this.m_networkStream.Write(serializedData, 0, serializedData.Length);
-            this.m_networkStream.Flush();
+            await this.m_networkStream.WriteAsync(serializedData, 0, serializedData.Length);
+            await this.m_networkStream.FlushAsync();
 
-            Task.Run(() => ReceiveFinancialDataResponse());
+            await ReceiveFinancialDataResponse();
         }
-        private void ReceiveFinancialDataResponse()
+        private async Task ReceiveFinancialDataResponse()
         {
-            int bytesRead = this.m_networkStream.Read(this.readBuffer, 0, this.readBuffer.Length);
+            int bytesRead = await this.m_networkStream.ReadAsync(this.readBuffer, 0, this.readBuffer.Length);
             if (bytesRead > 0)
             {
                 Packet responsePacket = (Packet)Packet.Desserialize(this.readBuffer);
@@ -304,37 +322,73 @@ namespace teamProject_00
                     chartData[categoryName] += data.Amount;
                 }
             }
-            this.Invoke(new MethodInvoker(delegate ()
-            {
-                this.chart1.Series.Clear();
-            }));
-
-            var series = new System.Windows.Forms.DataVisualization.Charting.Series
-            {
-                Name = "FinancialData",
-                IsVisibleInLegend = true,
-                ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Pie
-            };
-
-            this.Invoke(new MethodInvoker(delegate ()
-            {
-                this.chart1.Series.Add(series);
-            }));
-
-            foreach (var entry in chartData)
+            if (this.InvokeRequired)
             {
                 this.Invoke(new MethodInvoker(delegate ()
                 {
-                    series.Points.AddXY(entry.Key, entry.Value);
+                    this.chart1.Series.Clear();
                 }));
-
             }
-            this.Invoke(new MethodInvoker(delegate ()
-            {
-                this.chart1.Invalidate();
-            }));
+            else
+                this.chart1.Series.Clear();
 
-        }
+
+            if (this.InvokeRequired)
+            {
+                this.Invoke(new MethodInvoker(delegate ()
+                {
+                    if (chart1.Series.IndexOf("FinancialData") != -1)
+                    {
+                        chart1.Series.Remove(chart1.Series["FinancialData"]);
+                    }
+
+                    var series = new System.Windows.Forms.DataVisualization.Charting.Series
+                    {
+                        Name = "FinancialData",
+                        IsVisibleInLegend = true,
+                        ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Pie
+                    };
+
+                    chart1.Series.Add(series);
+
+                    foreach (var entry in chartData)
+                    {
+                        series.Points.AddXY(entry.Key, entry.Value);
+
+                    }
+                    chart1.Invalidate();
+                }));
+            }
+            else
+            {
+                // 동일한 이름의 시리즈가 이미 존재하는지 확인하고 제거
+                if (chart1.Series.IndexOf("FinancialData") != -1)
+                {
+                    chart1.Series.Remove(chart1.Series["FinancialData"]);
+                }
+
+                var series = new System.Windows.Forms.DataVisualization.Charting.Series
+                {
+                    Name = "FinancialData",
+                    IsVisibleInLegend = true,
+                    ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Pie
+                };
+
+                chart1.Series.Add(series);
+
+                foreach (var entry in chartData)
+                {
+                    series.Points.AddXY(entry.Key, entry.Value);
+                }
+
+                chart1.Invalidate();
+            }
+        
+
+
+
+
+    }
 
         private void ParseFinancialData(string financialDataMessage)
         {
@@ -360,5 +414,6 @@ namespace teamProject_00
             InOutAddForm inOutAddForm = new InOutAddForm(this.m_client, this.m_networkStream, this.userId);
             inOutAddForm.Show();
         }
+
     }
 }

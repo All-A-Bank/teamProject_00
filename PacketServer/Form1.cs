@@ -292,13 +292,21 @@ namespace PacketServer
                     case (int)PacketType.재정데이터요청:
                         {
                             string userId = packet.message[0];
-                            SendFinancialDataPacket(userId);
+                            this.Invoke(new MethodInvoker(delegate ()
+                            {
+                                SendFinancialDataPacket(userId);
+                            }));
+                            
                             break;
                         }
                     case (int)PacketType.카테고리이름요청:
                         {
                             string categoryId = packet.message[0];
-                            SendCategoryName(categoryId);
+                            this.Invoke(new MethodInvoker(delegate ()
+                            {
+                                SendCategoryName(categoryId);
+                            }));
+                            
                             break;
                         }
 

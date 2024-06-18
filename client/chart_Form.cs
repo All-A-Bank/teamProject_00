@@ -29,9 +29,17 @@ namespace teamProject_00
             this.m_client = client;
             this.userId = userId;
             this.financialDataList = new List<FinancialData>();
-            RequestFinancialData();
+
+            LoadDataAsync();
+
             //this.Paint += new System.Windows.Forms.PaintEventHandler(this.chart_Form_Paint);
         }
+
+        private async void LoadDataAsync()
+        {
+            await RequestFinancialData();
+        }
+
         Dictionary<string, float> expense = new Dictionary<string, float>
         {
             {"식비",300.0f },
@@ -47,21 +55,21 @@ namespace teamProject_00
             public decimal Amount { get; set; }
         }
 
-        private void RequestFinancialData()
+        private async Task RequestFinancialData()
         {
             Packet requestPacket = new Packet();
             requestPacket.type = (int)PacketType.재정데이터요청;
             requestPacket.message.Add(this.userId);
 
             byte[] serializedData = Packet.Serialize(requestPacket);
-            this.m_networkStream.Write(serializedData, 0, serializedData.Length);
-            this.m_networkStream.Flush();
+            await this.m_networkStream.WriteAsync(serializedData, 0, serializedData.Length);
+            await this.m_networkStream.FlushAsync();
 
-            Task.Run(() => ReceiveFinancialDataResponse());
+            await ReceiveFinancialDataResponse();
         }
-        private void ReceiveFinancialDataResponse()
+        private async Task ReceiveFinancialDataResponse()
         {
-            int bytesRead = this.m_networkStream.Read(this.readBuffer, 0, this.readBuffer.Length);
+            int bytesRead = await this.m_networkStream.ReadAsync(this.readBuffer, 0, this.readBuffer.Length);
             if (bytesRead > 0)
             {
                 Packet responsePacket = (Packet)Packet.Desserialize(this.readBuffer);
@@ -119,37 +127,71 @@ namespace teamProject_00
                     chartData[categoryName] += data.Amount;
                 }
             }
-            this.Invoke(new MethodInvoker(delegate ()
-            {
-                this.chart1.Series.Clear();
-            }));
-           
-            var series = new System.Windows.Forms.DataVisualization.Charting.Series
-            {
-                Name = "FinancialData",
-                IsVisibleInLegend = true,
-                ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Pie
-            };
-
-            this.Invoke(new MethodInvoker(delegate ()
-            {
-                this.chart1.Series.Add(series);
-            }));
-            
-
-            foreach (var entry in chartData)
+            if (this.InvokeRequired)
             {
                 this.Invoke(new MethodInvoker(delegate ()
                 {
-                    series.Points.AddXY(entry.Key, entry.Value);
+                    this.chart1.Series.Clear();
                 }));
-                
             }
-            this.Invoke(new MethodInvoker(delegate ()
+            else
+                this.chart1.Series.Clear();
+
+
+
+
+            if (this.InvokeRequired)
             {
-                this.chart1.Invalidate();
-            }));
-            
+                this.Invoke(new MethodInvoker(delegate ()
+                {
+                    if (chart1.Series.IndexOf("FinancialData") != -1)
+                    {
+                        chart1.Series.Remove(chart1.Series["FinancialData"]);
+                    }
+
+                    var series = new System.Windows.Forms.DataVisualization.Charting.Series
+                    {
+                        Name = "FinancialData",
+                        IsVisibleInLegend = true,
+                        ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Pie
+                    };
+
+                    chart1.Series.Add(series);
+
+                    foreach (var entry in chartData)
+                    {
+                        series.Points.AddXY(entry.Key, entry.Value);
+
+                    }
+                    chart1.Invalidate();
+                }));
+            }
+
+            else
+            {
+                // 동일한 이름의 시리즈가 이미 존재하는지 확인하고 제거
+                if (chart1.Series.IndexOf("FinancialData") != -1)
+                {
+                    chart1.Series.Remove(chart1.Series["FinancialData"]);
+                }
+
+                var series = new System.Windows.Forms.DataVisualization.Charting.Series
+                {
+                    Name = "FinancialData",
+                    IsVisibleInLegend = true,
+                    ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Pie
+                };
+
+                chart1.Series.Add(series);
+
+                foreach (var entry in chartData)
+                {
+                    series.Points.AddXY(entry.Key, entry.Value);
+                }
+
+                chart1.Invalidate();
+            }
+
         }
         private void btn_exit_Click(object sender, EventArgs e)
         {
@@ -222,7 +264,10 @@ namespace teamProject_00
 
         private void chart_Form_Load(object sender, EventArgs e)
         {
-
+            Task.Run(async () =>
+            {
+                await RequestFinancialData();
+            });
         }
      
         private void rdo_in_CheckedChanged_1(object sender, EventArgs e)

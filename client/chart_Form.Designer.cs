@@ -77,6 +77,7 @@
             // rdo_all
             // 
             this.rdo_all.AutoSize = true;
+            this.rdo_all.Checked = true;
             this.rdo_all.Location = new System.Drawing.Point(144, 24);
             this.rdo_all.Name = "rdo_all";
             this.rdo_all.Size = new System.Drawing.Size(58, 19);
@@ -93,7 +94,6 @@
             this.rdo_out.Name = "rdo_out";
             this.rdo_out.Size = new System.Drawing.Size(58, 19);
             this.rdo_out.TabIndex = 1;
-            this.rdo_out.TabStop = true;
             this.rdo_out.Text = "지출";
             this.rdo_out.UseVisualStyleBackColor = true;
             this.rdo_out.CheckedChanged += new System.EventHandler(this.rdo_out_CheckedChanged_1);
@@ -105,7 +105,6 @@
             this.rdo_in.Name = "rdo_in";
             this.rdo_in.Size = new System.Drawing.Size(58, 19);
             this.rdo_in.TabIndex = 0;
-            this.rdo_in.TabStop = true;
             this.rdo_in.Text = "수입";
             this.rdo_in.UseVisualStyleBackColor = true;
             this.rdo_in.CheckedChanged += new System.EventHandler(this.rdo_in_CheckedChanged_1);
