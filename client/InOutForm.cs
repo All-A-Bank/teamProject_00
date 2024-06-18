@@ -42,6 +42,7 @@ namespace teamProject_00
             lvwExpense.Columns.Add("가격");
             lvwExpense.Columns.Add("설명");
             lvwExpense.Columns.Add("날짜");
+            lvwExpense.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);
 
             lvwIncome.View = View.Details;
             lvwIncome.Columns.Add("id");
@@ -49,6 +50,7 @@ namespace teamProject_00
             lvwIncome.Columns.Add("가격");
             lvwIncome.Columns.Add("설명");
             lvwIncome.Columns.Add("날짜");
+            lvwIncome.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);
 
 
             LoadDataAsync();
@@ -184,6 +186,7 @@ namespace teamProject_00
                             lvwItem.SubItems.Add(amount);
                             lvwItem.SubItems.Add(description);
                             lvwItem.SubItems.Add(date);
+                            
 
                             lvwIncome.Items.Add(lvwItem);
                         }

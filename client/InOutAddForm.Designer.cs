@@ -35,11 +35,11 @@
             this.txtIncomeExpense = new System.Windows.Forms.Label();
             this.btnAdd = new System.Windows.Forms.Button();
             this.dateTimePicker = new System.Windows.Forms.DateTimePicker();
-            this.txtcategory = new System.Windows.Forms.TextBox();
             this.txtprice = new System.Windows.Forms.TextBox();
             this.txtdecript = new System.Windows.Forms.TextBox();
             this.comboBoxType = new System.Windows.Forms.ComboBox();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
+            this.comboBoxCategory = new System.Windows.Forms.ComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -64,7 +64,7 @@
             // txtAmount
             // 
             this.txtAmount.AutoSize = true;
-            this.txtAmount.Location = new System.Drawing.Point(183, 162);
+            this.txtAmount.Location = new System.Drawing.Point(198, 162);
             this.txtAmount.Name = "txtAmount";
             this.txtAmount.Size = new System.Drawing.Size(44, 18);
             this.txtAmount.TabIndex = 2;
@@ -105,16 +105,9 @@
             this.dateTimePicker.Size = new System.Drawing.Size(277, 28);
             this.dateTimePicker.TabIndex = 6;
             // 
-            // txtcategory
-            // 
-            this.txtcategory.Location = new System.Drawing.Point(54, 183);
-            this.txtcategory.Name = "txtcategory";
-            this.txtcategory.Size = new System.Drawing.Size(100, 28);
-            this.txtcategory.TabIndex = 7;
-            // 
             // txtprice
             // 
-            this.txtprice.Location = new System.Drawing.Point(186, 183);
+            this.txtprice.Location = new System.Drawing.Point(201, 183);
             this.txtprice.Name = "txtprice";
             this.txtprice.Size = new System.Drawing.Size(100, 28);
             this.txtprice.TabIndex = 8;
@@ -144,16 +137,24 @@
             this.dataGridView1.Size = new System.Drawing.Size(365, 326);
             this.dataGridView1.TabIndex = 11;
             // 
+            // comboBoxCategory
+            // 
+            this.comboBoxCategory.FormattingEnabled = true;
+            this.comboBoxCategory.Location = new System.Drawing.Point(54, 185);
+            this.comboBoxCategory.Name = "comboBoxCategory";
+            this.comboBoxCategory.Size = new System.Drawing.Size(121, 26);
+            this.comboBoxCategory.TabIndex = 12;
+            // 
             // InOutAddForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1110, 447);
+            this.Controls.Add(this.comboBoxCategory);
             this.Controls.Add(this.dataGridView1);
             this.Controls.Add(this.comboBoxType);
             this.Controls.Add(this.txtdecript);
             this.Controls.Add(this.txtprice);
-            this.Controls.Add(this.txtcategory);
             this.Controls.Add(this.dateTimePicker);
             this.Controls.Add(this.btnAdd);
             this.Controls.Add(this.txtIncomeExpense);
@@ -179,10 +180,10 @@
         private System.Windows.Forms.Label txtIncomeExpense;
         private System.Windows.Forms.Button btnAdd;
         private System.Windows.Forms.DateTimePicker dateTimePicker;
-        private System.Windows.Forms.TextBox txtcategory;
         private System.Windows.Forms.TextBox txtprice;
         private System.Windows.Forms.TextBox txtdecript;
         private System.Windows.Forms.ComboBox comboBoxType;
         private System.Windows.Forms.DataGridView dataGridView1;
+        private System.Windows.Forms.ComboBox comboBoxCategory;
     }
 }

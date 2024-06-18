@@ -61,10 +61,31 @@ namespace teamProject_00
             comboBoxType.Items.Add("Income");
             comboBoxType.Items.Add("Expense");
 
+            // 카테고리 항목 추가
+            comboBoxCategory.Items.Add(new ComboBoxItem("식비", 1));
+            comboBoxCategory.Items.Add(new ComboBoxItem("교통비", 2));
+            comboBoxCategory.Items.Add(new ComboBoxItem("여가생활", 3));
+            comboBoxCategory.Items.Add(new ComboBoxItem("급여", 4));
+            comboBoxCategory.Items.Add(new ComboBoxItem("연금", 5));
         }
 
-       
 
+        public class ComboBoxItem
+        {
+            public string Text { get; set; }
+            public int Value { get; set; }
+
+            public ComboBoxItem(string text, int value)
+            {
+                Text = text;
+                Value = value;
+            }
+
+            public override string ToString()
+            {
+                return Text;
+            }
+        }
 
         private void btnAdd_Click(object sender, EventArgs e)
         {
@@ -75,25 +96,21 @@ namespace teamProject_00
             }
             try
             {
-                
                 string type = comboBoxType.SelectedItem.ToString();
 
+                ComboBoxItem selectedCategory = comboBoxCategory.SelectedItem as ComboBoxItem;
+                if (selectedCategory == null)
+                {
+                    MessageBox.Show("카테고리를 선택해주세요.");
+                    return;
+                }
+
+                int categoryId = selectedCategory.Value;
 
                 if (type == "Income")
                 {
                     IncomeAdd incomeAdd = new IncomeAdd();
                     incomeAdd.type = (int)PacketType.수입추가;
-
-                    // Parse txtcategory.Text to int for category_id
-                    if (int.TryParse(txtcategory.Text, out int categoryId))
-                    {
-                        incomeAdd.category_id = categoryId;
-                    }
-                    else
-                    {
-                        MessageBox.Show("카테고리 ID를 정수로 입력해주세요.");
-                        return;
-                    }
 
                     // Parse txtprice.Text to int for amount
                     if (int.TryParse(txtprice.Text, out int amount))
@@ -106,11 +123,10 @@ namespace teamProject_00
                         return;
                     }
 
+                    incomeAdd.category_id = categoryId;
                     incomeAdd.description = txtdecript.Text;
-                    incomeAdd.date = dateTimePicker.Value.Date;
+                    incomeAdd.date = dateTimePicker.Value;
                     incomeAdd.userId = userId;
-
-                   // MessageBox.Show(userId);
 
                     Packet.Serialize(incomeAdd).CopyTo(this.sendBuffer, 0);
                     this.Send();
@@ -119,17 +135,6 @@ namespace teamProject_00
                 {
                     ExpenseAdd expenseAdd = new ExpenseAdd();
                     expenseAdd.type = (int)PacketType.지출추가;
-
-                    // Parse txtcategory.Text to int for category_id
-                    if (int.TryParse(txtcategory.Text, out int categoryId))
-                    {
-                        expenseAdd.category_id = categoryId;
-                    }
-                    else
-                    {
-                        MessageBox.Show("카테고리 ID를 정수로 입력해주세요.");
-                        return;
-                    }
 
                     // Parse txtprice.Text to int for amount
                     if (int.TryParse(txtprice.Text, out int amount))
@@ -142,15 +147,14 @@ namespace teamProject_00
                         return;
                     }
 
+                    expenseAdd.category_id = categoryId;
                     expenseAdd.description = txtdecript.Text;
-                    expenseAdd.date = dateTimePicker.Value.Date;
+                    expenseAdd.date = dateTimePicker.Value;
                     expenseAdd.userId = userId;
 
                     Packet.Serialize(expenseAdd).CopyTo(this.sendBuffer, 0);
                     this.Send();
                 }
-
-
 
                 MessageBox.Show("레코드가 성공적으로 추가되었습니다.");
                 this.Close(); // Close the form after saving

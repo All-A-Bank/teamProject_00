@@ -43,6 +43,7 @@ namespace teamProject_00
             lvwExpense.Columns.Add("가격");
             lvwExpense.Columns.Add("설명");
             lvwExpense.Columns.Add("날짜");
+            lvwExpense.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);
 
             lvwIncome.View = View.Details;
             lvwIncome.Columns.Clear();
@@ -50,6 +51,7 @@ namespace teamProject_00
             lvwIncome.Columns.Add("가격");
             lvwIncome.Columns.Add("설명");
             lvwIncome.Columns.Add("날짜");
+            lvwIncome.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);
 
             this.Activated += new EventHandler(this.mainForm_Activated);
         }
@@ -178,16 +180,19 @@ namespace teamProject_00
                     {
                         lvwIncome.Items.Clear();
                     }));
-                    
-                    List<string> msgList = responsePacket.message;
 
+                    List<string> msgList = responsePacket.message;
+                    int incomeCount = 0; // 추가된 항목 수를 카운트
 
                     foreach (string msg in msgList)
                     {
+                        if (incomeCount >= 5)
+                            break;
+
                         string[] data = msg.Split(',');
 
                         string categoryId = data[0];
-                        string categoryName = GetCategoryName(categoryId); // Implement this method to get category name from ID
+                        string categoryName = GetCategoryName(categoryId); // ID로부터 카테고리 이름을 가져오는 메서드 구현 필요
                         string amount = data[1];
                         string description = data[2];
                         string date = data[3];
@@ -202,14 +207,11 @@ namespace teamProject_00
                             lvwIncome.Items.Add(lvwItem);
                         }));
 
+                        incomeCount++; // 항목 수 증가
 
-
-                        //디버깅용 로그 출력
+                        // 디버깅용 로그 출력
                         Console.WriteLine($"Income: {categoryName}, {amount}, {description}, {date}");
-
                     }
-
-
                 }
             }
         }
@@ -230,15 +232,17 @@ namespace teamProject_00
                     }));
 
                     List<string> msgList = responsePacket.message;
-
-                   
+                    int expenseCount = 0; // 추가된 항목 수를 카운트
 
                     foreach (string msg in msgList)
                     {
+                        if (expenseCount >= 5)
+                            break;
+
                         string[] data = msg.Split(',');
 
                         string categoryId = data[0];
-                        string categoryName = GetCategoryName(categoryId); // Implement this method to get category name from ID
+                        string categoryName = GetCategoryName(categoryId); // ID로부터 카테고리 이름을 가져오는 메서드 구현 필요
                         string amount = data[1];
                         string description = data[2];
                         string date = data[3];
@@ -255,13 +259,11 @@ namespace teamProject_00
                             lvwExpense.Items.Add(lvwItem);
                         }));
 
-
-
+                        expenseCount++; // 항목 수 증가
 
                         // 디버깅용 로그 출력
                         Console.WriteLine($"Expense: {categoryName}, {amount}, {description}, {date}");
                     }
-
 
                     this.Invoke(new MethodInvoker(delegate
                     {
