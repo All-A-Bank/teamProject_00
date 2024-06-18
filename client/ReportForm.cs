@@ -31,10 +31,10 @@ namespace teamProject_00
 
             // Initialize ListView
             lvwTransactions.View = View.Details;
-            lvwTransactions.Columns.Add("타입", 100);
+            lvwTransactions.Columns.Add("유형", 100);
             lvwTransactions.Columns.Add("카테고리", 100);
             lvwTransactions.Columns.Add("가격", 100);
-            lvwTransactions.Columns.Add("설명", 200);
+            lvwTransactions.Columns.Add("설명", 100);
             lvwTransactions.Columns.Add("날짜", 100);
         }
 
@@ -179,7 +179,18 @@ namespace teamProject_00
 
         }
 
-        private void btn_import_Click(object sender, EventArgs e)
+      
+
+      
+
+        private void btn_MonthlyData_Click(object sender, EventArgs e)
+        {
+            DateTimePicker dateTimePicker = (DateTimePicker)this.Controls["dateTimePicker"];
+            string yearMonth = dateTimePicker.Value.ToString("yyyy-MM");
+            RequestMonthlyTransactionList(yearMonth);
+        }
+
+        private void btn_import_Click_1(object sender, EventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog
             {
@@ -203,23 +214,22 @@ namespace teamProject_00
                         }
 
                         string[] values = line.Split(',');
-                        if (values.Length == 4)
+                        if (values.Length == 5)
                         {
                             ListViewItem lvwItem = new ListViewItem(values[0]);
                             lvwItem.SubItems.Add(values[1]);
                             lvwItem.SubItems.Add(values[2]);
                             lvwItem.SubItems.Add(values[3]);
-
+                            lvwItem.SubItems.Add(values[4]);
                             lvwTransactions.Items.Add(lvwItem);
                         }
                     }
                 }
                 MessageBox.Show("CSV 파일에서 데이터를 불러왔습니다.");
             }
-
         }
 
-        private void btn_export_Click(object sender, EventArgs e)
+        private void btn_export_Click_1(object sender, EventArgs e)
         {
             SaveFileDialog saveFileDialog = new SaveFileDialog
             {
@@ -231,7 +241,7 @@ namespace teamProject_00
             {
                 using (StreamWriter sw = new StreamWriter(saveFileDialog.FileName, false, Encoding.UTF8))
                 {
-                    sw.WriteLine("카테고리,가격,설명,날짜");
+                    sw.WriteLine("유형,카테고리,가격,설명,날짜");
                     foreach (ListViewItem item in lvwTransactions.Items)
                     {
                         string[] subItems = new string[item.SubItems.Count];
@@ -246,13 +256,6 @@ namespace teamProject_00
                 MessageBox.Show("CSV 파일로 저장되었습니다.");
             }
 
-        }
-
-        private void btn_MonthlyData_Click(object sender, EventArgs e)
-        {
-            DateTimePicker dateTimePicker = (DateTimePicker)this.Controls["dateTimePicker"];
-            string yearMonth = dateTimePicker.Value.ToString("yyyy-MM");
-            RequestMonthlyTransactionList(yearMonth);
         }
     }
 }
