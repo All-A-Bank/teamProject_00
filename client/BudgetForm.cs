@@ -14,12 +14,9 @@ namespace teamProject_00
 {
     public partial class BudgetForm : Form
     {
-
         private NetworkStream m_networkStream;
         private TcpClient m_client;
         private string userId;
-
-        private bool m_bConnect = false;
 
         private byte[] readBuffer = new byte[1024 * 4];
 
@@ -32,19 +29,6 @@ namespace teamProject_00
             this.m_networkStream = networkStream;
             this.m_client = client;
             this.userId = userId;
-            this.m_bConnect = client.Connected;
-        }
-
-        private void monthCalendar1_DateSelected(object sender, DateRangeEventArgs e)
-        {
-            // 선택한 날짜 확인
-            DateTime selectedDate = monthCalendar1.SelectionStart.Date;
-
-            // 새 폼 생성 및 열기
-            using (ExpenseForm expense_form = new ExpenseForm(selectedDate))
-            {
-                expense_form.ShowDialog();
-            }
         }
 
         private void btn_exit_Click(object sender, EventArgs e)
@@ -63,26 +47,34 @@ namespace teamProject_00
 
         private void BudgetForm_Load(object sender, EventArgs e)
         {
-            RequestBudget();
-            SetCurrentDate();
+            Task.Run(async () =>
+            {
+                await RefreshData();
+            });
         }
 
-        private void RequestBudget()
+        private async Task RefreshData()
+        {
+            await RequestBudget();
+            await SetCurrentDate();
+        }
+
+        private async Task RequestBudget()
         {
             Packet requestPacket = new Packet();
             requestPacket.type = (int)PacketType.유저이름과예산요청;
             requestPacket.message.Add(this.userId);
 
             byte[] serializedData = Packet.Serialize(requestPacket);
-            this.m_networkStream.Write(serializedData, 0, serializedData.Length);
-            this.m_networkStream.Flush();
+            await this.m_networkStream.WriteAsync(serializedData, 0, serializedData.Length);
+            await this.m_networkStream.FlushAsync();
 
-            Task.Run(() => ReceiveResponse());
+            await ReceiveResponse();
         }
 
-        private void ReceiveResponse()
+        private async Task ReceiveResponse()
         {
-            int bytesRead = this.m_networkStream.Read(this.readBuffer, 0, this.readBuffer.Length);
+            int bytesRead = await this.m_networkStream.ReadAsync(this.readBuffer, 0, this.readBuffer.Length);
             if (bytesRead > 0)
             {
                 Packet responsePacket = (Packet)Packet.Desserialize(this.readBuffer);
@@ -97,42 +89,42 @@ namespace teamProject_00
             }
         }
 
-        private void SetCurrentDate()
+        private async Task SetCurrentDate()
         {
             string selectedDate = DateTime.Now.ToString("yyyy-MM-dd");
-            RequestIncomeList(selectedDate);
-            RequestExpenseList(selectedDate);
+            await RequestIncomeList(selectedDate);
+            await RequestExpenseList(selectedDate);
         }
 
-        private void RequestIncomeList(string date)
+        private async Task RequestIncomeList(string date)
         {
             Packet requestPacket = new Packet();
             requestPacket.type = (int)PacketType.수입목록요청;
             requestPacket.message.Add(this.userId + "," + date);
 
             byte[] serializedData = Packet.Serialize(requestPacket);
-            this.m_networkStream.Write(serializedData, 0, serializedData.Length);
-            this.m_networkStream.Flush();
+            await this.m_networkStream.WriteAsync(serializedData, 0, serializedData.Length);
+            await this.m_networkStream.FlushAsync();
 
-            Task.Run(() => ReceiveIncomeListResponse());
+            await ReceiveIncomeListResponse();
         }
 
-        private void RequestExpenseList(string date)
+        private async Task RequestExpenseList(string date)
         {
             Packet requestPacket = new Packet();
             requestPacket.type = (int)PacketType.지출목록요청;
             requestPacket.message.Add(this.userId + "," + date);
 
             byte[] serializedData = Packet.Serialize(requestPacket);
-            this.m_networkStream.Write(serializedData, 0, serializedData.Length);
-            this.m_networkStream.Flush();
+            await this.m_networkStream.WriteAsync(serializedData, 0, serializedData.Length);
+            await this.m_networkStream.FlushAsync();
 
-            Task.Run(() => ReceiveExpenseListResponse());
+            await ReceiveExpenseListResponse();
         }
 
-        private void ReceiveIncomeListResponse()
+        private async Task ReceiveIncomeListResponse()
         {
-            int bytesRead = this.m_networkStream.Read(this.readBuffer, 0, this.readBuffer.Length);
+            int bytesRead = await this.m_networkStream.ReadAsync(this.readBuffer, 0, this.readBuffer.Length);
             if (bytesRead > 0)
             {
                 Packet responsePacket = (Packet)Packet.Desserialize(this.readBuffer);
@@ -156,9 +148,9 @@ namespace teamProject_00
             }
         }
 
-        private void ReceiveExpenseListResponse()
+        private async Task ReceiveExpenseListResponse()
         {
-            int bytesRead = this.m_networkStream.Read(this.readBuffer, 0, this.readBuffer.Length);
+            int bytesRead = await this.m_networkStream.ReadAsync(this.readBuffer, 0, this.readBuffer.Length);
             if (bytesRead > 0)
             {
                 Packet responsePacket = (Packet)Packet.Desserialize(this.readBuffer);
