@@ -39,19 +39,18 @@ namespace teamProject_00
 
             lvwExpense.View = View.Details;
             lvwExpense.Columns.Clear();
-            lvwExpense.Columns.Add("카테고리");
-            lvwExpense.Columns.Add("가격");
-            lvwExpense.Columns.Add("설명");
-            lvwExpense.Columns.Add("날짜");
-            lvwExpense.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);
+            lvwExpense.Columns.Add("카테고리", 100);
+            lvwExpense.Columns.Add("가격", 70);
+            lvwExpense.Columns.Add("설명", 70);
+            lvwExpense.Columns.Add("날짜", 200);
 
             lvwIncome.View = View.Details;
             lvwIncome.Columns.Clear();
-            lvwIncome.Columns.Add("카테고리");
-            lvwIncome.Columns.Add("가격");
-            lvwIncome.Columns.Add("설명");
-            lvwIncome.Columns.Add("날짜");
-            lvwIncome.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);
+            lvwIncome.Columns.Add("카테고리", 100);
+            lvwIncome.Columns.Add("가격", 70);
+            lvwIncome.Columns.Add("설명", 70);
+            lvwIncome.Columns.Add("날짜", 200);
+
         }
 
 

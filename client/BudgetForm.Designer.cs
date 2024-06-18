@@ -41,7 +41,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(56, 45);
+            this.label1.Location = new System.Drawing.Point(131, 39);
             this.label1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(77, 12);
@@ -51,7 +51,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(56, 82);
+            this.label2.Location = new System.Drawing.Point(131, 76);
             this.label2.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(85, 12);
@@ -60,7 +60,7 @@
             // 
             // BudgetSetting_btn
             // 
-            this.BudgetSetting_btn.Location = new System.Drawing.Point(58, 165);
+            this.BudgetSetting_btn.Location = new System.Drawing.Point(133, 159);
             this.BudgetSetting_btn.Margin = new System.Windows.Forms.Padding(2);
             this.BudgetSetting_btn.Name = "BudgetSetting_btn";
             this.BudgetSetting_btn.Size = new System.Drawing.Size(100, 34);
@@ -71,7 +71,7 @@
             // 
             // btn_exit
             // 
-            this.btn_exit.Location = new System.Drawing.Point(270, 45);
+            this.btn_exit.Location = new System.Drawing.Point(345, 39);
             this.btn_exit.Margin = new System.Windows.Forms.Padding(2);
             this.btn_exit.Name = "btn_exit";
             this.btn_exit.Size = new System.Drawing.Size(96, 34);
@@ -83,7 +83,7 @@
             // lblSetBudget
             // 
             this.lblSetBudget.AutoSize = true;
-            this.lblSetBudget.Location = new System.Drawing.Point(130, 45);
+            this.lblSetBudget.Location = new System.Drawing.Point(205, 39);
             this.lblSetBudget.Name = "lblSetBudget";
             this.lblSetBudget.Size = new System.Drawing.Size(11, 12);
             this.lblSetBudget.TabIndex = 5;
@@ -92,7 +92,7 @@
             // lblExpenseAmount
             // 
             this.lblExpenseAmount.AutoSize = true;
-            this.lblExpenseAmount.Location = new System.Drawing.Point(146, 82);
+            this.lblExpenseAmount.Location = new System.Drawing.Point(221, 76);
             this.lblExpenseAmount.Name = "lblExpenseAmount";
             this.lblExpenseAmount.Size = new System.Drawing.Size(11, 12);
             this.lblExpenseAmount.TabIndex = 6;
@@ -101,7 +101,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(56, 121);
+            this.label3.Location = new System.Drawing.Point(131, 115);
             this.label3.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(81, 12);
@@ -111,7 +111,7 @@
             // lblIncomeAmount
             // 
             this.lblIncomeAmount.AutoSize = true;
-            this.lblIncomeAmount.Location = new System.Drawing.Point(146, 121);
+            this.lblIncomeAmount.Location = new System.Drawing.Point(221, 115);
             this.lblIncomeAmount.Name = "lblIncomeAmount";
             this.lblIncomeAmount.Size = new System.Drawing.Size(11, 12);
             this.lblIncomeAmount.TabIndex = 8;

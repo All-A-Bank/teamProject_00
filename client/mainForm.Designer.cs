@@ -48,7 +48,7 @@
             // 
             // btn_InOut
             // 
-            this.btn_InOut.Location = new System.Drawing.Point(563, 130);
+            this.btn_InOut.Location = new System.Drawing.Point(693, 123);
             this.btn_InOut.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btn_InOut.Name = "btn_InOut";
             this.btn_InOut.Size = new System.Drawing.Size(112, 56);
@@ -59,7 +59,7 @@
             // 
             // btn_budget
             // 
-            this.btn_budget.Location = new System.Drawing.Point(563, 215);
+            this.btn_budget.Location = new System.Drawing.Point(693, 208);
             this.btn_budget.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btn_budget.Name = "btn_budget";
             this.btn_budget.Size = new System.Drawing.Size(112, 48);
@@ -70,7 +70,7 @@
             // 
             // btn_report
             // 
-            this.btn_report.Location = new System.Drawing.Point(563, 290);
+            this.btn_report.Location = new System.Drawing.Point(693, 283);
             this.btn_report.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btn_report.Name = "btn_report";
             this.btn_report.Size = new System.Drawing.Size(112, 55);
@@ -94,12 +94,12 @@
             this.lbl_name.Name = "lbl_name";
             this.lbl_name.Size = new System.Drawing.Size(49, 12);
             this.lbl_name.TabIndex = 5;
-            this.lbl_name.Text = "name : ";
+            this.lbl_name.Text = "닉네임 :";
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(18, 54);
+            this.label2.Location = new System.Drawing.Point(18, 59);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(65, 12);
             this.label2.TabIndex = 6;
@@ -118,7 +118,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(18, 233);
+            this.label4.Location = new System.Drawing.Point(18, 244);
             this.label4.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(29, 12);
@@ -128,7 +128,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(20, 9);
+            this.label5.Location = new System.Drawing.Point(20, 14);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(41, 12);
             this.label5.TabIndex = 13;
@@ -137,7 +137,7 @@
             // nowDate
             // 
             this.nowDate.AutoSize = true;
-            this.nowDate.Location = new System.Drawing.Point(66, 11);
+            this.nowDate.Location = new System.Drawing.Point(66, 16);
             this.nowDate.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.nowDate.Name = "nowDate";
             this.nowDate.Size = new System.Drawing.Size(0, 12);
@@ -146,7 +146,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(18, 29);
+            this.label1.Location = new System.Drawing.Point(18, 34);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(77, 12);
             this.label1.TabIndex = 15;
@@ -155,7 +155,7 @@
             // lblSetBudget
             // 
             this.lblSetBudget.AutoSize = true;
-            this.lblSetBudget.Location = new System.Drawing.Point(101, 29);
+            this.lblSetBudget.Location = new System.Drawing.Point(101, 34);
             this.lblSetBudget.Name = "lblSetBudget";
             this.lblSetBudget.Size = new System.Drawing.Size(11, 12);
             this.lblSetBudget.TabIndex = 16;
@@ -164,7 +164,7 @@
             // lblRemainBudget
             // 
             this.lblRemainBudget.AutoSize = true;
-            this.lblRemainBudget.Location = new System.Drawing.Point(89, 54);
+            this.lblRemainBudget.Location = new System.Drawing.Point(89, 59);
             this.lblRemainBudget.Name = "lblRemainBudget";
             this.lblRemainBudget.Size = new System.Drawing.Size(11, 12);
             this.lblRemainBudget.TabIndex = 17;
@@ -173,9 +173,9 @@
             // lvwExpense
             // 
             this.lvwExpense.HideSelection = false;
-            this.lvwExpense.Location = new System.Drawing.Point(20, 101);
+            this.lvwExpense.Location = new System.Drawing.Point(22, 101);
             this.lvwExpense.Name = "lvwExpense";
-            this.lvwExpense.Size = new System.Drawing.Size(435, 115);
+            this.lvwExpense.Size = new System.Drawing.Size(618, 137);
             this.lvwExpense.TabIndex = 18;
             this.lvwExpense.UseCompatibleStateImageBehavior = false;
             // 
@@ -184,7 +184,7 @@
             this.lvwIncome.HideSelection = false;
             this.lvwIncome.Location = new System.Drawing.Point(20, 261);
             this.lvwIncome.Name = "lvwIncome";
-            this.lvwIncome.Size = new System.Drawing.Size(435, 115);
+            this.lvwIncome.Size = new System.Drawing.Size(618, 146);
             this.lvwIncome.TabIndex = 19;
             this.lvwIncome.UseCompatibleStateImageBehavior = false;
             // 

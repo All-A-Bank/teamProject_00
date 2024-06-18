@@ -233,35 +233,6 @@ namespace teamProject_00
             return categoryColors[categoryId];
         }
 
-        private void btnAddCategory_Click(object sender, EventArgs e)
-        {
-            // 사용자 입력 값을 가져옵니다.
-            string category = txtCategory.Text;
-            string inputValue = txtValue.Text;
-            float value;
-
-            // 입력된 값이 float로 변환 가능한지 확인합니다.
-            if (float.TryParse(inputValue, out value))
-            {
-                // 딕셔너리에 카테고리와 값을 추가합니다.
-                // 이미 해당 카테고리가 있는 경우 값을 업데이트하거나 사용자에게 알립니다.
-                if (expense.ContainsKey(category))
-                {
-                    MessageBox.Show("이미 존재하는 카테고리입니다. 다른 이름을 사용해주세요.");
-                }
-                else
-                {
-                    expense.Add(category, value);
-
-                    this.Invalidate();
-                }
-            }
-            else
-            {
-                MessageBox.Show("올바른 숫자 값을 입력해주세요.");
-            }
-        }
-
         private void chart_Form_Load(object sender, EventArgs e)
         {
             Task.Run(async () =>
