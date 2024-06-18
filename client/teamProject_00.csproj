@@ -64,12 +64,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>DataSet1.xsd</DependentUpon>
     </Compile>
-    <Compile Include="ExpenseForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="ExpenseForm.Designer.cs">
-      <DependentUpon>ExpenseForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="loginForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -122,9 +116,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="chart_Form.resx">
       <DependentUpon>chart_Form.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="ExpenseForm.resx">
-      <DependentUpon>ExpenseForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="loginForm.resx">
       <DependentUpon>loginForm.cs</DependentUpon>

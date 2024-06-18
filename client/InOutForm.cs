@@ -83,10 +83,9 @@ namespace teamProject_00
             incomeCnt = 1;
             expenseCnt = 1;
 
-            string selectedDate = dateTimePicker1.Value.Date.ToString();
+            string selectedDate = dateTimePicker1.Value.Date.ToString("yyyy-MM-dd");
 
             await SetCurrentDate(selectedDate);
-            MessageBox.Show("날짜를 변경했습니다!");
         }
 
         private async Task SetCurrentDate(string selectedDate)
@@ -131,6 +130,25 @@ namespace teamProject_00
             await ReceiveExpenseListResponse();
         }
 
+        private string GetCategoryName(string categoryId)
+        {
+            switch (categoryId)
+            {
+                case "1":
+                    return "식비";
+                case "2":
+                    return "교통비";
+                case "3":
+                    return "여가생활";
+                case "4":
+                    return "급여";
+                case "5":
+                    return "연금";
+                default:
+                    return "기타";
+            }
+        }
+
         private async Task ReceiveIncomeListResponse()
         {
             int bytesRead = await this.m_networkStream.ReadAsync(this.readBuffer, 0, this.readBuffer.Length);
@@ -140,64 +158,31 @@ namespace teamProject_00
 
                 if ((PacketType)responsePacket.type == PacketType.수입목록요청)
                 {
+                    List<string> msgList = responsePacket.message;
 
-                    List<string> msgList = new List<string>();
                     this.Invoke(new MethodInvoker(delegate ()
                     {
-                        for (int i = 0; i < responsePacket.message.Count; i++)
+                        foreach (string msg in msgList)
                         {
                             ListViewItem lvwItem = new ListViewItem(Convert.ToString(incomeCnt));
                             incomeCnt++;
 
-                            msgList.Add(responsePacket.message[i]);
-                            string[] msg = msgList[i].Split(',');
+                            string[] data = msg.Split(',');
 
-                            string categoryId = msg[0];
-                            string categoryName;
-                            if (int.Parse(categoryId) == 1)
-                            {
-                                categoryName = "식비";
-                            }
-                            else if (int.Parse(categoryId) == 2)
-                            {
+                            string categoryId = data[0];
+                            string categoryName = GetCategoryName(categoryId);
 
-                                categoryName = "교통비";
-                            }
-                            else if (int.Parse(categoryId) == 3)
-                            {
-
-                                categoryName = "여가생활";
-                            }
-                            else if (int.Parse(categoryId) == 4)
-                            {
-
-                                categoryName = "급여";
-                            }
-                            else
-                            {
-
-                                categoryName = "연금";
-                            }
-
-
-                            string amount = msg[1];
-                            string description = msg[2];
-                            string date = msg[3];
+                            string amount = data[1];
+                            string description = data[2];
+                            string date = data[3];
 
                             lvwItem.SubItems.Add(categoryName);
                             lvwItem.SubItems.Add(amount);
                             lvwItem.SubItems.Add(description);
                             lvwItem.SubItems.Add(date);
-                            
 
                             lvwIncome.Items.Add(lvwItem);
-
                         }
-                    }));
-                    
-
-                    this.Invoke(new MethodInvoker(delegate ()
-                    {
                     }));
                 }
                 else if ((PacketType)responsePacket.type == PacketType.에러)
@@ -219,57 +204,32 @@ namespace teamProject_00
 
                 if ((PacketType)responsePacket.type == PacketType.지출목록요청)
                 {
+                    List<string> msgList = responsePacket.message;
 
-                    List<string> msgList = new List<string>();
-                    for (int i = 0; i < responsePacket.message.Count; i++)
+                    this.Invoke(new MethodInvoker(delegate ()
                     {
-                        ListViewItem lvwItem = new ListViewItem(Convert.ToString(expenseCnt));
-                        expenseCnt++;
-
-                        msgList.Add(responsePacket.message[i]);
-                        string[] msg = msgList[i].Split(',');
-
-                        string categoryId = msg[0];
-                        string categoryName;
-                        if (int.Parse(categoryId) == 1)
+                        foreach (string msg in msgList)
                         {
-                            categoryName = "식비";
+                            ListViewItem lvwItem = new ListViewItem(Convert.ToString(expenseCnt));
+                            expenseCnt++;
+
+                            string[] data = msg.Split(',');
+
+                            string categoryId = data[0];
+                            string categoryName = GetCategoryName(categoryId);
+
+                            string amount = data[1];
+                            string description = data[2];
+                            string date = data[3];
+
+                            lvwItem.SubItems.Add(categoryName);
+                            lvwItem.SubItems.Add(amount);
+                            lvwItem.SubItems.Add(description);
+                            lvwItem.SubItems.Add(date);
+
+                            lvwExpense.Items.Add(lvwItem);
                         }
-                        else if (int.Parse(categoryId) == 2)
-                        {
-
-                            categoryName = "교통비";
-                        }
-                        else if (int.Parse(categoryId) == 3)
-                        {
-
-                            categoryName = "여가생활";
-                        }
-                        else if (int.Parse(categoryId) == 4)
-                        {
-
-                            categoryName = "급여";
-                        }
-                        else
-                        {
-
-                            categoryName = "연금";
-                        }
-
-
-                        string amount = msg[1];
-                        string description = msg[2];
-                        string date = msg[3];
-
-                        lvwItem.SubItems.Add(categoryName);
-                        lvwItem.SubItems.Add(amount);
-                        lvwItem.SubItems.Add(description);
-                        lvwItem.SubItems.Add(date);
-
-                        lvwExpense.Items.Add(lvwItem);
-                    }
-
-
+                    }));
                 }
                 else if ((PacketType)responsePacket.type == PacketType.에러)
                 {
@@ -280,6 +240,8 @@ namespace teamProject_00
                 }
             }
         }
+
+
         public class FinancialData
         {
             public string Type { get; set; }
