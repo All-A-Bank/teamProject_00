@@ -157,7 +157,10 @@ namespace teamProject_00
                 }
 
                 MessageBox.Show("레코드가 성공적으로 추가되었습니다.");
-                this.Close(); // Close the form after saving
+
+                InOutForm inoutForm = new InOutForm(this.m_networkStream, this.m_client, userId);
+                inoutForm.Show();
+                this.Hide();
             }
             catch (Exception ex)
             {

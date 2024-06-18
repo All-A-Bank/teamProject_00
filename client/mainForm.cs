@@ -52,8 +52,6 @@ namespace teamProject_00
             lvwIncome.Columns.Add("설명");
             lvwIncome.Columns.Add("날짜");
             lvwIncome.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);
-
-            this.Activated += new EventHandler(this.mainForm_Activated);
         }
 
 
@@ -120,11 +118,12 @@ namespace teamProject_00
 
                     this.Invoke(new MethodInvoker(delegate ()
                     {
+                        MessageBox.Show("메인 폼으로 이동했습니다!");
                         label_name.Text = userName;
                         lblSetBudget.Text = amount;
-
-                        budgetAmount = decimal.Parse(lblSetBudget.Text);
                     }));
+
+                    budgetAmount = decimal.Parse(lblSetBudget.Text);
                 }
             }
         }
@@ -292,10 +291,6 @@ namespace teamProject_00
             }
         }
 
-        private async void mainForm_Activated(object sender, EventArgs e)
-        {
-            await RefreshData();
-        }
         private async Task RefreshData()
         {
             await RequestUserNameAndBudget();

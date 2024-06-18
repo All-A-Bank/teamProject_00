@@ -86,6 +86,7 @@ namespace teamProject_00
             string selectedDate = dateTimePicker1.Value.Date.ToString();
 
             await SetCurrentDate(selectedDate);
+            MessageBox.Show("날짜를 변경했습니다!");
         }
 
         private async Task SetCurrentDate(string selectedDate)
@@ -98,6 +99,7 @@ namespace teamProject_00
         {
             Task.Run(async () =>
             {
+                await SetCurrentDate(dateTimePicker1.Value.Date.ToString("yyyy-MM-dd"));
                 await RequestFinancialData();
             });
             
@@ -189,6 +191,8 @@ namespace teamProject_00
                             
 
                             lvwIncome.Items.Add(lvwItem);
+
+                            MessageBox.Show("lvwIncome");
                         }
                     }));
                     
@@ -413,9 +417,9 @@ namespace teamProject_00
         }
         private void addbutton_Click(object sender, EventArgs e)
         {
-            //MessageBox.Show(userId);
             InOutAddForm inOutAddForm = new InOutAddForm(this.m_client, this.m_networkStream, this.userId);
             inOutAddForm.Show();
+            this.Hide();
         }
 
     }
