@@ -95,6 +95,7 @@
             this.btn_MonthlyData.TabIndex = 5;
             this.btn_MonthlyData.Text = "조회";
             this.btn_MonthlyData.UseVisualStyleBackColor = true;
+            this.btn_MonthlyData.Click += new System.EventHandler(this.btn_MonthlyData_Click);
             // 
             // ReportForm
             // 

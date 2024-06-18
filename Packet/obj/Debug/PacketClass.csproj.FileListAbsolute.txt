@@ -28,3 +28,9 @@ C:\Users\rayun\source\repos\teamProject_00\Packet\obj\Debug\PacketClass.csproj.A
 C:\Users\rayun\source\repos\teamProject_00\Packet\obj\Debug\PacketClass.csproj.CoreCompileInputs.cache
 C:\Users\rayun\source\repos\teamProject_00\Packet\obj\Debug\Packet.dll
 C:\Users\rayun\source\repos\teamProject_00\Packet\obj\Debug\Packet.pdb
+C:\Users\user\Source\Repos\teamProject_00\Packet\bin\Debug\Packet.dll
+C:\Users\user\Source\Repos\teamProject_00\Packet\bin\Debug\Packet.pdb
+C:\Users\user\Source\Repos\teamProject_00\Packet\obj\Debug\PacketClass.csproj.AssemblyReference.cache
+C:\Users\user\Source\Repos\teamProject_00\Packet\obj\Debug\PacketClass.csproj.CoreCompileInputs.cache
+C:\Users\user\Source\Repos\teamProject_00\Packet\obj\Debug\Packet.dll
+C:\Users\user\Source\Repos\teamProject_00\Packet\obj\Debug\Packet.pdb

@@ -50,12 +50,7 @@ namespace teamProject_00
 
         }
 
-        private void btnMonthlyData_Click(object sender, EventArgs e)
-        {
-            DateTimePicker dateTimePicker = (DateTimePicker)this.Controls["dateTimePicker"];
-            string yearMonth = dateTimePicker.Value.ToString("yyyy-MM");
-            RequestMonthlyTransactionList(yearMonth);
-        }
+        
 
         private void RequestMonthlyTransactionList(string yearMonth)
         {
@@ -251,6 +246,13 @@ namespace teamProject_00
                 MessageBox.Show("CSV 파일로 저장되었습니다.");
             }
 
+        }
+
+        private void btn_MonthlyData_Click(object sender, EventArgs e)
+        {
+            DateTimePicker dateTimePicker = (DateTimePicker)this.Controls["dateTimePicker"];
+            string yearMonth = dateTimePicker.Value.ToString("yyyy-MM");
+            RequestMonthlyTransactionList(yearMonth);
         }
     }
 }
