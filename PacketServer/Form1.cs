@@ -310,6 +310,35 @@ namespace PacketServer
                             break;
                         }
 
+                    case (int)PacketType.수입월목록요청:
+                        {
+                            string[] msg = packet.message[0].Split(',');
+                            string userId = msg[0];
+                            string yearMonth = msg[1];
+
+                            this.Invoke(new MethodInvoker(delegate ()
+                            {
+                                this.txt_server_state.AppendText("수입 월 목록 요청: " + userId + " " + yearMonth + "\r\n");
+                                SendMonthlyIncomeResponse(userId, yearMonth);
+                            }));
+                            break;
+                        }
+
+                    case (int)PacketType.지출월목록요청:
+                        {
+                            string[] msg = packet.message[0].Split(',');
+                            string userId = msg[0];
+                            string yearMonth = msg[1];
+
+                            this.Invoke(new MethodInvoker(delegate ()
+                            {
+                                this.txt_server_state.AppendText("지출 월 목록 요청: " + userId + " " + yearMonth + "\r\n");
+                                SendMonthlyExpenseResponse(userId, yearMonth);
+                            }));
+                            break;
+                        }
+
+
                 }
             }
         }
@@ -517,5 +546,42 @@ namespace PacketServer
             this.m_thread = new Thread(new ThreadStart(ServerStart));
             this.m_thread.Start();
         }
+
+        private void SendMonthlyIncomeResponse(string userId, string yearMonth)
+        {
+            DataTable incomeTable = dataSet.Tables["Income"];
+            DataRow[] incomeList = incomeTable.Select($"userId = '{userId}' AND CONVERT(date, 'System.String') LIKE '{yearMonth}%'");
+            Packet responsePacket = new Packet();
+            responsePacket.type = (int)PacketType.수입월목록요청;
+
+            foreach (DataRow income in incomeList)
+            {
+                string incomeInfo = $"{income["category_id"]}, {income["amount"]}, {income["description"]}, {income["date"]}";
+                responsePacket.message.Add(incomeInfo);
+            }
+
+            byte[] serializedData = Packet.Serialize(responsePacket);
+            this.m_networkstream.Write(serializedData, 0, serializedData.Length);
+            this.m_networkstream.Flush();
+        }
+
+        private void SendMonthlyExpenseResponse(string userId, string yearMonth)
+        {
+            DataTable expensesTable = dataSet.Tables["Expense"];
+            DataRow[] expenseList = expensesTable.Select($"userId = '{userId}' AND CONVERT(date, 'System.String') LIKE '{yearMonth}%'");
+            Packet responsePacket = new Packet();
+            responsePacket.type = (int)PacketType.지출월목록요청;
+
+            foreach (DataRow expense in expenseList)
+            {
+                string expenseInfo = $"{expense["category_id"]}, {expense["amount"]}, {expense["description"]}, {expense["date"]}";
+                responsePacket.message.Add(expenseInfo);
+            }
+
+            byte[] serializedData = Packet.Serialize(responsePacket);
+            this.m_networkstream.Write(serializedData, 0, serializedData.Length);
+            this.m_networkstream.Flush();
+        }
+
     }
 }

@@ -30,61 +30,84 @@
         {
             this.button1 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
-            this.listView1 = new System.Windows.Forms.ListView();
+            this.lvwTransactions = new System.Windows.Forms.ListView();
             this.btn_exit = new System.Windows.Forms.Button();
+            this.dateTimePicker = new System.Windows.Forms.DateTimePicker();
+            this.btn_MonthlyData = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(76, 78);
-            this.button1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.button1.Location = new System.Drawing.Point(92, 308);
+            this.button1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(122, 38);
+            this.button1.Size = new System.Drawing.Size(227, 76);
             this.button1.TabIndex = 0;
             this.button1.Text = "보고서 읽어오기";
             this.button1.UseVisualStyleBackColor = true;
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(76, 176);
-            this.button2.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.button2.Location = new System.Drawing.Point(92, 470);
+            this.button2.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(122, 41);
+            this.button2.Size = new System.Drawing.Size(227, 82);
             this.button2.TabIndex = 1;
             this.button2.Text = "보고서 Export";
             this.button2.UseVisualStyleBackColor = true;
             // 
-            // listView1
+            // lvwTransactions
             // 
-            this.listView1.HideSelection = false;
-            this.listView1.Location = new System.Drawing.Point(273, 40);
-            this.listView1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
-            this.listView1.Name = "listView1";
-            this.listView1.Size = new System.Drawing.Size(181, 226);
-            this.listView1.TabIndex = 2;
-            this.listView1.UseCompatibleStateImageBehavior = false;
+            this.lvwTransactions.HideSelection = false;
+            this.lvwTransactions.Location = new System.Drawing.Point(507, 80);
+            this.lvwTransactions.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.lvwTransactions.Name = "lvwTransactions";
+            this.lvwTransactions.Size = new System.Drawing.Size(748, 494);
+            this.lvwTransactions.TabIndex = 2;
+            this.lvwTransactions.UseCompatibleStateImageBehavior = false;
             // 
             // btn_exit
             // 
-            this.btn_exit.Location = new System.Drawing.Point(429, 6);
-            this.btn_exit.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btn_exit.Location = new System.Drawing.Point(1114, 13);
+            this.btn_exit.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.btn_exit.Name = "btn_exit";
-            this.btn_exit.Size = new System.Drawing.Size(69, 21);
+            this.btn_exit.Size = new System.Drawing.Size(128, 42);
             this.btn_exit.TabIndex = 3;
             this.btn_exit.Text = "뒤로";
             this.btn_exit.UseVisualStyleBackColor = true;
             this.btn_exit.Click += new System.EventHandler(this.btn_exit_Click);
             // 
+            // dateTimePicker
+            // 
+            this.dateTimePicker.CustomFormat = "      yyyy-MM";
+            this.dateTimePicker.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
+            this.dateTimePicker.Location = new System.Drawing.Point(25, 167);
+            this.dateTimePicker.Name = "dateTimePicker";
+            this.dateTimePicker.ShowUpDown = true;
+            this.dateTimePicker.Size = new System.Drawing.Size(212, 35);
+            this.dateTimePicker.TabIndex = 4;
+            // 
+            // btn_MonthlyData
+            // 
+            this.btn_MonthlyData.Location = new System.Drawing.Point(291, 159);
+            this.btn_MonthlyData.Name = "btn_MonthlyData";
+            this.btn_MonthlyData.Size = new System.Drawing.Size(137, 54);
+            this.btn_MonthlyData.TabIndex = 5;
+            this.btn_MonthlyData.Text = "조회";
+            this.btn_MonthlyData.UseVisualStyleBackColor = true;
+            // 
             // ReportForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(13F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(514, 313);
+            this.ClientSize = new System.Drawing.Size(1322, 626);
+            this.Controls.Add(this.btn_MonthlyData);
+            this.Controls.Add(this.dateTimePicker);
             this.Controls.Add(this.btn_exit);
-            this.Controls.Add(this.listView1);
+            this.Controls.Add(this.lvwTransactions);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.button1);
-            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Name = "ReportForm";
             this.Text = "ReportForm";
             this.Load += new System.EventHandler(this.ReportForm_Load);
@@ -96,7 +119,9 @@
 
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Button button2;
-        private System.Windows.Forms.ListView listView1;
+        private System.Windows.Forms.ListView lvwTransactions;
         private System.Windows.Forms.Button btn_exit;
+        private System.Windows.Forms.DateTimePicker dateTimePicker;
+        private System.Windows.Forms.Button btn_MonthlyData;
     }
 }

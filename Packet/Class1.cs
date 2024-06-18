@@ -19,7 +19,10 @@ public enum PacketType
     수입목록요청,
     지출목록요청,
     재정데이터요청,
-    카테고리이름요청
+    카테고리이름요청,
+    수입월목록요청,  // 추가된 부분
+    지출월목록요청   // 추가된 부분
+
 }
 
 namespace PacketClass
